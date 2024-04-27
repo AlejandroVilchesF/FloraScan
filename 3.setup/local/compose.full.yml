@@ -1,0 +1,141 @@
+#Docker compose version
+version: '3.9'
+
+#Services to be powered up
+services:
+
+  ###################################################
+  ############# Servicio de FRONTEND Vue.JS
+  ####################################################
+  frontend:
+    # Imagen de node a utilizar, junto con la última versión estable
+    image: "node:20.5.0-alpine"
+    user: "node"
+    container_name: 'frontend'
+    restart: always
+    # Directorio de trabajo dentro del contenedor
+    working_dir: /home/frontend
+    tty: true
+    # Entorno en el que se
+    environment:
+      # FOR DEVELOPMENT
+      - NODE_ENV=development
+      - FRONTEND_PORT=8089
+      # FOR DEVELOPMENT AND PRODUCTION VARS
+      - FRONTEND_BASEPATH=/
+      - BACKEND_URI=/api
+      - NODE_OPTIONS=--openssl-legacy-provider
+      # TIMEZOME
+      - TZ=Europe/Madrid
+    # Se monta el código fuente en el directorio /home/node del contenedor
+    volumes:
+      - ./../../1.frontend:/home/frontend
+    # Indica los puertos TCP/IP los cuales se pueden accede a los servicios del contenedor
+    expose:
+      - "8089"
+    # Se mapean los puertos locales al servidor host.
+    ports:
+      - '8089:8089'
+    # Indicamos que el contenedor se encuentra en una red, para que esté visible con el resto de contenedores.
+    networks:
+      - red-apps
+    # Comando que ejecuta el contenedor para arrancar el servidor 'npm run dev'
+    command: ash -c "npm install && npm run serve"
+
+  ###########################################
+  ############# BACKEND SERVICE #############
+  ###########################################
+  backend:
+    # Node image
+    image: "node:20.0.0-alpine"
+    user: "root"
+    restart: always
+    container_name: 'backend'
+    # working directory inside the container
+    working_dir: /home/backend
+    tty: true
+    # environment variables
+    environment:
+      - PROJECT_ACRONYM=florascan
+      - NODE_ENV=development
+      - API_PORT=8091
+      - API_URL_BASE_PATH=/api
+      - CUT_TIME=7
+      - TZ=Europe/Madrid
+      - MONGO_DB_URL=mongodb://mongodb:27017/florascan?tls=false
+    # Source code is mounted into /home/backend inside the container
+    volumes:
+      - './../../2.backend/:/home/backend'
+    # Indicates TCP/IP ports accesible for the container services
+    # Expose for them to be available outside docker
+    expose:
+      - "8091"
+    # local posts are mapped for the hosting server
+    ports:
+      - '8091:8091'  
+    # the container belongs into a local network in order to stay visible for the rest of the containers 
+    networks:
+      - red-apps
+    # command for running the server
+    command: ash -c "npm install && npm run dev"
+
+  #########################################
+  ############# MONGO SERVICE #############
+  #########################################
+  mongodb:
+    # Mongo image
+    image: "mongo:6.0.5"
+    container_name: mongodb
+    # automatic restart
+    restart: always
+    environment:
+      - TZ=Europe/Madrid
+    expose:
+      - '27017'
+    # local posts are mapped for the hosting server
+    ports:
+      - '27017:27017'
+    # volume declaration in order to persist data when the container goes down 
+    volumes:
+      - mongodbvol:/data/db
+      - ./mongo/backup:/data/backup
+    # the container belongs into a local network in order to stay visible for the rest of the containers 
+    networks:
+       - red-apps
+       
+  ##########################################
+  ###############  WEBSERVER  ##############
+  ##########################################
+  # REVERSE PROXY - NGINX
+  ########################
+  nginx:
+    image: 'nginx:alpine'
+    container_name: 'nginx'
+    restart: always
+    tty: true
+    networks:
+      - red-apps
+    ports:
+      - '80:80'
+      - '443:443'
+    expose:
+      - "80"
+      - "443"
+    volumes:
+      #Configuracion NGINX (default.conf)
+      - './nginx/:/etc/nginx/conf.d'
+
+  #################################################################################################
+  #################################################################################################
+  #################################################################################################
+  #################################################################################################
+
+
+#network connector
+networks:
+  red-apps:
+    driver: bridge
+
+# persistency volumes
+volumes:
+  mongodbvol:
