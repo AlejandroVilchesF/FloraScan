@@ -1,7 +1,7 @@
 {
-  "name": "sidv3_frontend",
+  "name": "florascan_frontend",
   "version": "3.1.0",
-  "description": "Frontend SID v3",
+  "description": "Frontend FloraScan",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

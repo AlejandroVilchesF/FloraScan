@@ -3,7 +3,7 @@ let template = {
 
     site: {
         /* Titulo corto del panel web */
-        shortname: "GIE Panel v3",
+        shortname: "FloraScan",
         /* URL DLE BACKEND */
         apiurl: "/api", /* http://localhost:8091/api */
         /* URL DE NOTIFICACIONES PUSH */
