@@ -14,7 +14,6 @@ exports.newAccount = async (req, res) => {
     let isAdmin = isUserAdmin(res);
     // Super admin 
     let isSuper = isSuperAdmin(res);
-
     if (!req.body.info.name || !req.body.info.email || !req.body.info.password) {
       return res.status(400).send({ message: 'Incomplete request', code: 3000 });
     } else {
@@ -54,10 +53,12 @@ exports.registerAccount = async (req, res) => {
   try {
     if (!req.body.info.name || !req.body.info.email || !req.body.info.password) {
       return res.status(400).send({ message: 'Incomplete request', code: 3000 });
+    } else if (!req.body.info.email.includes("@")) {
+      return res.status(400).send({ message: 'Email con formato incorrecto', code: 3000 });
     } else {
       const newUser = new User({
         info: {
-          name: req.body.info.name,
+          nombre_usuario: req.body.info.name,
           email: req.body.info.email,
           status: false,
           password: authContr.encryptPassword(req.body.info.password)
@@ -66,35 +67,23 @@ exports.registerAccount = async (req, res) => {
       });
       try{
         await newUser.save();
-
         // Create activation token
         let token = jwt.sign({ 
           _id: newUser._id, 
           email: newUser.info.email, 
-          name: newUser.info.name, 
+          name: newUser.info.nombre_usuario, 
           role: newUser.role
         }, config.secret, { expiresIn: 1800 });
 
         newUser.activation = token;
         await newUser.save();
-
-        try{
-          await Mailer(
-            'Bonodere - Account activation',
-            `Please follow this link to activate your account: https://bonodere.famluro.es/activate?token=${token}`,
-            newUser.info.email
-          );
-        }catch(mailerError){
-          console.log(mailerError);
-          await User.deleteOne({ _id: newUser._id });
-          return res.status(403).send({ message: 'Email does not exist', code: 3000 });
-        }
-        await PostLog('ACCOUNT REGISTER', `User ${newUser.info.name} has registered`, newUser._id);
-        return res.status(200).send({ message: 'User successfully created', code: 2001 });
+        await PostLog('ACCOUNT REGISTER', `User ${newUser.info.nombre_usuario} has registered`, newUser._id);
+        return res.status(200).send({ message: 'User successfully created', code: 2000 });
       }catch(saveError){
         if(saveError.code == 11000){
           return res.status(403).send({ message: 'User already exists', code: 3000 });
         }else{
+          console.log("hola");
           return res.status(403).send({ message: 'User can not be created', code: 3000 });
         }
       }
@@ -130,7 +119,7 @@ exports.resetPassword = async (req, res) => {
 
       // Action permitted
       await User.updateOne({ _id: req.body.id }, { 'info.password': authContr.encryptPassword(req.body.password), recovery: null });
-      await PostLog('PASSWORD RESET', `User ${FindUser.info.name} has reset pasword`, FindUser._id);
+      await PostLog('PASSWORD RESET', `User ${FindUser.info.nombre_usuario} has reset pasword`, FindUser._id);
       return res.status(200).send({ message: 'Password successfully updated', code: 2000 });
     }
   } catch (err) {

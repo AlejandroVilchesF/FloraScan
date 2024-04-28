@@ -1,89 +1,81 @@
 <template>
-    <div>
-        <form @submit="register($event)">
-            <Input 
-                type="text" 
-                v-model="name" 
-                id="name-key" 
-                :maxlength="30" 
-                :label="'Nombre'"
-                icon="bi bi-person-fill fs-5" 
-                :required="true" 
-            />
-            <Input 
-                type="text" 
-                v-model="email" 
-                id="email-key" 
-                :label="'Email'"
-                icon="bi bi-envelope-at fs-5" 
-                :required="true" 
-            />
-            <div class="row mx-0 px-0">
-                <div class="col-12 col-md-6 mx-0 ps-0 pe-md-1 pe-0">
-                    <Input
-                        type="password"
-                        v-model="password"
-                        id="password"
-                        :minlength="6"
-                        :maxlength="20"
-                        :label="'Contraseña'"
-                        icon="bi bi-key-fill fs-5"
-                        :required="true"
-                        :notRoundedEnd="true"
-                        class="password"
-                        @input="clearRePassword"
-                    >
-                        <template v-slot:message>
-                            <span id="pw_eye" class="input-group-text text-center revealPassword rounded-end" @click="revealPassword($event)">
-                            <i class="bi bi-eye-slash-fill fs-5 eye" id="show_eye_pw"></i>
-                            <i class="bi bi-eye d-none fs-5 eye" id="hide_eye_pw"></i>
-                            </span>
-                        </template>
-                    </Input>
-                </div>
-                <div class="col-12 col-md-6 mx-0 pe-0 ps-md-1 ps-0">
-                    <Input
-                        type="password"
-                        v-model="repassword"
-                        id="password-re"
-                        :label="'Confirme la contraseña'"
-                        icon="bi bi-key-fill fs-5"
-                        :required="true"
-                        :notRoundedEnd="true"
-                        class="password"
-                        @input="checkPasswordValidity"
-                    >
-                        <template v-slot:message>
-                            <span id="rpw_eye" class="input-group-text text-center revealPassword rounded-end" @click="revealRePassword($event)">
-                            <i class="bi bi-eye-slash-fill fs-5 eye" id="show_eye_rpw"></i>
-                            <i class="bi bi-eye d-none fs-5 eye" id="hide_eye_rpw"></i>
-                            </span>
-                        </template>
-                    </Input>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <button
-                    class="
-                    col-12 col-sm-12 col-md-10 col-lg-12 col-xl-6
-                    btn btn-lg btn-success
-                    btnSubmit me-2
-                    "
-                    type="submit"
-                    title="Register"
+    <form @submit="register($event)">
+        <Input 
+            type="text" 
+            v-model="name"
+            id="name-key" 
+            :maxlength="30" 
+            :label="'Nombre'"
+            icon="bi bi-person-fill fs-5" 
+            :required="true" 
+        />
+        <Input 
+            type="text" 
+            v-model="email" 
+            id="email-key" 
+            :label="'Email'"
+            icon="bi bi-envelope-at fs-5" 
+            :required="true" 
+        />
+        <div class="row mx-0 px-0">
+            <div class="col-12 col-md-6 mx-0 ps-0 pe-md-1 pe-0">
+                <Input
+                    type="password"
+                    v-model="password"
+                    id="password"
+                    :minlength="6"
+                    :maxlength="20"
+                    :label="'Contraseña'"
+                    icon="bi bi-key-fill fs-5"
+                    :required="true"
+                    :notRoundedEnd="true"
+                    class="password"
+                    @input="clearRePassword"
                 >
-                    {{ 'Registrar' }}
-                </button>
-                <Spinner v-if="isLoading"></Spinner>
+                    <template v-slot:message>
+                        <span id="pw_eye" class="input-group-text text-center revealPassword rounded-end" @click="revealPassword($event)">
+                        <i class="bi bi-eye-slash-fill fs-5 eye" id="show_eye_pw"></i>
+                        <i class="bi bi-eye d-none fs-5 eye" id="hide_eye_pw"></i>
+                        </span>
+                    </template>
+                </Input>
             </div>
-            <div class="w-100 d-flex justify-content-center align-items-center" style="height: 97px;">
-                <div class="text-center" v-if="submitSuccess">
-                    <h5 class="text-success fw-bold">{{ 'Registro solicitado' }}</h5>
-                    <h6 class="text-success fw-bold">{{ 'Link de activacion enviado a su email. Por favor complete el proceso en 30 minutos' }}</h6>
-                </div>
+            <div class="col-12 col-md-6 mx-0 pe-0 ps-md-1 ps-0">
+                <Input
+                    type="password"
+                    v-model="repassword"
+                    id="password-re"
+                    :label="'Confirme la contraseña'"
+                    icon="bi bi-key-fill fs-5"
+                    :required="true"
+                    :notRoundedEnd="true"
+                    class="password"
+                    @input="checkPasswordValidity"
+                >
+                    <template v-slot:message>
+                        <span id="rpw_eye" class="input-group-text text-center revealPassword rounded-end" @click="revealRePassword($event)">
+                        <i class="bi bi-eye-slash-fill fs-5 eye" id="show_eye_rpw"></i>
+                        <i class="bi bi-eye d-none fs-5 eye" id="hide_eye_rpw"></i>
+                        </span>
+                    </template>
+                </Input>
             </div>
-        </form>
-    </div>
+        </div>
+        <div class="d-flex justify-content-center mb-5">
+            <button
+                class="
+                col-12 col-sm-12 col-md-10 col-lg-12 col-xl-6
+                btn btn-lg btn-success
+                btnSubmit me-2
+                "
+                type="submit"
+                title="Register"
+            >
+                {{ 'Registrar' }}
+            </button>
+            <Spinner v-if="isLoading"></Spinner>
+        </div>
+    </form>
 </template>
   
   

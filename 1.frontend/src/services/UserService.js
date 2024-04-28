@@ -74,10 +74,10 @@ class UserService {
     return http.delete(`/user/delete/self`);
   }
 
-  registerAccount(getUserName, useremail, userpassword){
+  registerAccount(username, useremail, userpassword){
     let body = {
       info: {
-        name: getUserName,
+        name: username,
         email: useremail,
         password: userpassword
       }
