@@ -9,7 +9,7 @@ export const useCommonStore = defineStore('common', {
       width: 0,
       height: 0
     },
-    lang: localStorage.getItem('lang')? localStorage.getItem('lang') : 'EN',
+    lang: localStorage.getItem('lang')? localStorage.getItem('lang') : 'ES',
     encryptedLocalStorage: null
   }),
 

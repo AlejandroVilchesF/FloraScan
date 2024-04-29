@@ -12,13 +12,13 @@ verifyToken = async (req, res, next) => {
     await jwt.verify(token, config.secret);
   }
   catch (error) {
-    return res.status(401).send({ message: 'Expired session', code: 3000 });
+    return res.status(401).send({ message: 'Sesion caducada', code: 3000 });
   }
 
   // Verify the token belongs to any user
   const userDB = await User.findOne({ token: token }).populate('role');
   if (!userDB) {
-    return res.status(401).send({ message: 'This session has been closed', code: 3000 });
+    return res.status(401).send({ message: 'Esta sesion ha sido cerrada', code: 3000 });
   } else {
     res.locals.tokenedUser = userDB;
   }
@@ -48,8 +48,8 @@ authRoute = async (req, res, next, allowedActions, self) => {
       // Remove user token
       let token = req.headers["x-access-token"];
       await User.updateOne({ _id: tokenedUser._id }, { $pull: { token: token } });
-      await PostLog('PERMISSION VIOLATION', `User ${res.locals.tokenedUser.info.name} has attempted to perform an unauthorized action`, res.locals.tokenedUser._id);
-      return res.status(401).send({ message: "Unauthorized request", code: 3000 });
+      await PostLog('PERMISSION VIOLATION', `El usuario ${res.locals.tokenedUser.info.name} ha intentado hacer una accion no permitida`, res.locals.tokenedUser._id);
+      return res.status(401).send({ message: "Peticion no permitida", code: 3000 });
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="breadcrumb d-flex flex-wrap">
     <div class="breadcrumb-item d-flex align-items-center">
-      <span>GIE Panel</span>
+      <span>FloraScan</span>
       <span v-for="(item, index) in crumbs" :key="index">
         <span class="ms-2 me-2">/</span>
         <router-link :to="{ name: item.name }" class="routerLink">

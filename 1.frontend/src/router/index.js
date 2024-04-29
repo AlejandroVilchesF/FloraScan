@@ -41,7 +41,7 @@ const routes = [
     path: '/user',
     name: 'user',
     meta: {
-      breadCrumb: 'User'
+      breadCrumb: 'Usuario'
     },
     component: Layout,
     children: [
@@ -50,8 +50,8 @@ const routes = [
         name: 'profile',
         component: () => import('@/views/profile'),
         meta: {
-          title: 'Profile',
-          breadCrumb: 'Profile',
+          title: 'Perfil',
+          breadCrumb: 'Perfil',
           action: 'USER_SELF',
           guest: false
         }
@@ -134,8 +134,8 @@ const routes = [
         name: 'users',
         component: () => import('@/views/users'),
         meta: {
-          title: 'Users and roles',
-          breadCrumb: 'Users and roles',
+          title: 'Usuarios y roles',
+          breadCrumb: 'Usuarios y roles',
           action: 'USER_SEE',
           guest: false
         }
@@ -145,8 +145,8 @@ const routes = [
         name: 'log',
         component: () => import('@/views/log'),
         meta: {
-          title: 'System log',
-          breadCrumb: 'System log',
+          title: 'Logs',
+          breadCrumb: 'Logs',
           action: 'PANEL_ADMIN',
           guest: false
         }

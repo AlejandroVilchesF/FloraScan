@@ -11,11 +11,11 @@ module.exports = app => {
   // Activate account 
   router.post("/activate", authController.activateAccount); // PUBLIC
 
-  // Set recovery token
-  router.put("/recovery/start", authController.setRecoveryToken); // PUBLIC
+  // // Set recovery token
+  // router.put("/recovery/start", authController.setRecoveryToken); // PUBLIC
 
-  // Check recovery token
-  router.post("/recovery/check", authController.checkRecoveryToken); // PUBLIC
+  // // Check recovery token
+  // router.post("/recovery/check", authController.checkRecoveryToken); // PUBLIC
 
   // Logout user
   router.post("/logout", [auth.verifyToken], authController.logout); // PROTECTED
