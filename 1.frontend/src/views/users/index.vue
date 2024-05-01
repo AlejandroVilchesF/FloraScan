@@ -13,7 +13,7 @@
               role="tab"
               aria-controls="users"
               aria-selected="true"
-              >Users
+              >Usuarios
             </a>
           </li>
           <li class="nav-item">

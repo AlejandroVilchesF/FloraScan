@@ -1,14 +1,13 @@
 <template>
   <div class="border-end bg-white" id="sidebar-wrapper">
     <a class="sidebar-brand" style="text-decoration: none">
-      <div class="mx-0 px-0">
-        <img src="~@/assets/logo/logo-gie-02.png" style="height: 50px; width: 150px;"/>
+      <div class="mx-0 px-0 text-center">
+        <img src="~@/assets/logo/logo-no-background.png" style="height: 100px; width: 100px;"/>
       </div>
-      <span style="font-size: 0.7rem">{{ panelVersion }}</span>
     </a>
  
     <ul class="sidebar-nav">
-      <li class="sidebar-header text-uppercase">{{ 'Public' }}</li>
+      <li class="sidebar-header text-uppercase">{{ 'Publico' }}</li>
 
       <router-link :to="{ name: 'inicio' }" class="routerLink">
         <li
@@ -78,7 +77,7 @@
         </li>
       </router-link>
 
-      <router-link :to="{ name: 'settings' }" class="routerLink">
+      <!-- <router-link :to="{ name: 'settings' }" class="routerLink">
         <li
           class="sidebar-item"
           :class="{ active: isCurrentRoute('settings') }"
@@ -88,7 +87,7 @@
             <span class="align-middle">Configuración</span>
           </a>
         </li>
-      </router-link>
+      </router-link> -->
     </ul>
   </div>
 </template>

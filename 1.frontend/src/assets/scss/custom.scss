@@ -345,11 +345,19 @@ body {
     background: #222e3c;
   }
 
+  #sidebar-wrapper{
+    background-color: #101f4a !important;
+  }
+
+  .sidebar-link{
+    background-color: #101f4a !important;
+  }
+
 }
 
 @include color-mode(light) {
   body  {
-    background: #f5f7fb;
+    background: #fff !important;
   }
 
   .navbar {
@@ -376,5 +384,44 @@ body {
 
   .deviceItem:hover {
     background-color: #90aaca;
+  }
+
+  #sidebar-wrapper{
+    background-color: #18b4f7 !important;
+  }
+
+  .sidebar-link{
+    background-color: #18b4f7 !important;
+  }
+
+  .sidebar-header{
+    color: #292929;
+    font-weight: bold;
+    opacity: 0.75 !important;
+  }
+
+  .sidebar-link > span{
+    color: #292929;
+    opacity: 0.75 !important;
+  }
+
+  .sidebar-link > i{
+    color: #292929;
+    opacity: 0.75 !important;
+  }
+
+  .sidebar-item.active .sidebar-link:hover,
+  .sidebar-item.active>.sidebar-link {
+      background: linear-gradient(90deg, #6edf97, #6edf97 5%, transparent);
+      border-left-color: #6edf97;
+      color: #292929;
+  }
+
+  .sidebar-item.active .sidebar-link:hover i,
+  .sidebar-item.active .sidebar-link:hover svg,
+  .sidebar-item.active>.sidebar-link i,
+  .sidebar-item.active>.sidebar-link span,
+  .sidebar-item.active>.sidebar-link svg {
+    color: #292929;
   }
 }

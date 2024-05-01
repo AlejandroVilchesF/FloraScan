@@ -232,7 +232,7 @@
     },
     mounted(){
         if(this.userData){
-            this.localName = this.userData.info.name;
+            this.localName = this.userData.info.nombre_usuario;
             this.localEmail = this.userData.info.email;
             this.localBio = this.userData.info.bio;
             if(this.localBio){
@@ -267,7 +267,7 @@
             reader.readAsDataURL(file);
         },
         async saveData(){
-            this.invalidName = this.localName != this.userData.info.name && (!this.localName || this.localName == '' || this.localName?.length > 30);
+            this.invalidName = this.localName != this.userData.info.nombre_usuario && (!this.localName || this.localName == '' || this.localName?.length > 30);
             this.invalidEmail = this.localEmail != this.userData.info.email && (!this.localEmail || this.localEmail == '' || this.localEmail?.length > 30);
             this.invalidBio =  this.bioLength > 500;
             let newPw = this.newPassword && this.newPassword != '';
@@ -405,7 +405,7 @@
         },
         async restoreData(){
             if(this.userData){
-                this.localName = this.userData.info.name;
+                this.localName = this.userData.info.nombre_usuario;
                 this.localEmail = this.userData.info.email;
                 this.localBio = this.userData.info.bio;
                 if(this.localBio){

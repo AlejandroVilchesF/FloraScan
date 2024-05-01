@@ -5,13 +5,13 @@
       ref="roleModal"
       id="roleModal"
       clase="modal-md"
-      :title="'Add role'"
+      :title="'Agregar Rol'"
       :footer="false"
       :frameless="true"
     >
       <template v-slot:modalBody>
         <Input
-          :label="'New role name'" 
+          :label="'Nuevo Rol'" 
           id="new-role-alias"
           type="text"
           v-model="newAlias"
@@ -19,7 +19,7 @@
         ></Input>
         <button class="btn btn-success mt-4" @click="createRole" data-bs-dismiss="modal">
           <i class="fas fa-plus"></i>
-          <span class="d-none d-md-inline"> Create</span>
+          <span class="d-none d-md-inline"> Crear</span>
         </button>
       </template>
     </Modal>
@@ -27,10 +27,10 @@
     <!-- MODAL CONFIRM DELETE ROLE -->
     <ModalConfirm 
       id="deleteRoleModal" 
-      title="Delete role" 
-      message="The selected role will be deleted from the database, this action is irreversible"
-      confirm="Yes, delete role"
-      reject="No, I made a mistake"
+      title="Eliminar Rol" 
+      message="El rol seleccionado sera eliminado de forma permanente de la base de datos ¿Quieres continuar?"
+      confirm="Si, elimina el rol"
+      reject="No, he cometido un error"
     />
 
     <div class="row p-2" v-if="roles && roles.length > 0">
@@ -41,7 +41,7 @@
           <i 
             class="fas fa-plus-circle p-2 text-success cursor-pointer" 
             style="font-size: x-large;"
-            title="Add new role" 
+            title="Agregar nuevo rol" 
             :data-bs-toggle="isUserAdmin? 'modal':''"
             data-bs-target="#roleModal"
           ></i>
@@ -59,9 +59,9 @@
           >{{ role.alias }}</a>
         </div>
       </div>
-      <!-- TAB PANES -->
+      <!-- TABS -->
       <div class="col-12 col-md-10 pt-2">
-        <h5 class="text-primary mt-4 mt-md-0 pb-1">Permissions</h5>
+        <h5 class="text-primary mt-4 mt-md-0 pb-1">Permisos</h5>
         <div class="tab-content">
           <div
             v-for="(role, index) in roles" 
@@ -72,13 +72,13 @@
             role="tabpanel"
           >
             <div class="row">
-              <div class="col-12 col-md-8">
+              <div class="col-12 col-md-9">
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th scope="col" class="text-center">Section</th>
-                      <th scope="col" class="text-center">See</th>
-                      <th scope="col" class="text-center">Admin</th>
+                      <th scope="col" class="text-center">Sección</th>
+                      <th scope="col" class="text-center">Vistas</th>
+                      <th scope="col" class="text-center">Administración</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -99,38 +99,40 @@
                     </tr>
                   </tbody>
                 </table>
+                <!-- Botones de acciones -->
                 <div class="row">
                   <div class="col-auto">
                     <button class="btn btn-success" @click="grantAllActions" :disabled="disabledFetures">
                       <i class="fas fa-circle-check"></i>
-                      <span class="d-none d-md-inline"> Grant all</span>
+                      <span class="d-none d-md-inline"> Conceder todos</span>
                     </button>
                   </div>
                   <div class="col-auto">
                     <button class="btn btn-danger" @click="denyAllActions" :disabled="disabledFetures">
                       <i class="fas fa-ban"></i>
-                      <span class="d-none d-md-inline"> Deny all</span>
+                      <span class="d-none d-md-inline"> Denegar todos</span>
                     </button>
                   </div>
                   <div class="col-auto">
                     <button class="btn btn-secondary" @click="resetRole" :disabled="disabledFetures">
                       <i class="fas fa-backward"></i>
-                      <span class="d-none d-md-inline"> Restore</span>
+                      <span class="d-none d-md-inline"> Restaurar</span>
                     </button>
                   </div>
                   <div class="col-auto">
                     <button class="btn btn-primary" @click="saveActions" :disabled="disabledFetures">
                       <i class="fas fa-edit"></i>
-                      <span class="d-none d-md-inline"> Save</span>
+                      <span class="d-none d-md-inline"> Guardar</span>
                     </button>
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-md-4 mt-4 mt-md-0">
-                <p>Created at: <span class="text-info">{{ createdAt }}</span></p>
-                <p>Last modified: <span class="text-info">{{ lastModified }}</span></p>
+              <!-- Informacion del rol -->
+              <div class="col-12 col-md-3 mt-4 mt-md-0">
+                <p>Creado: <span class="text-info">{{ createdAt }}</span></p>
+                <p>Modificado: <span class="text-info">{{ lastModified }}</span></p>
                 <Input
-                    :label="'Edit role name'" 
+                    :label="'Editar nombre rol'" 
                     id="role-alias"
                     type="text"
                     v-model="selectedRole.alias"
@@ -145,7 +147,7 @@
                   @click="listenDeleteConfirm(selectedRole?._id)"
                 >
                   <i class="fas fa-trash"></i>
-                  <span> Delete role</span>
+                  <span> Eliminar rol</span>
                 </button>
               </div>
             </div>

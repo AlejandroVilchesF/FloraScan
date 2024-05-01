@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 col-md-4">
         <Select 
-          label="Log type"
+          label="Tipo de Log"
           id="searchLogType"
           :modelValue="findParams.logType"
           :options="logTypeOptions"
@@ -107,7 +107,7 @@ export default {
       ],
       secondaryLogs: [],
       logTypeOptions: [
-        {key: 'Any', value: 'any'},
+        {key: 'Cualquiera', value: 'any'},
         {key: 'SYSTEM ACCESS', value: 'SYSTEM ACCESS'},
         {key: 'ACCOUNT REGISTER', value: 'ACCOUNT REGISTER'},
         {key: 'RECOVERY REQUEST', value: 'RECOVERY REQUEST'},

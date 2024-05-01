@@ -15,7 +15,7 @@
             <div class="row">
               <div class="col-12 col-md-6">
                 <Input
-                  :label="'Name'" 
+                  :label="'Nombre de Usuario'" 
                   id="user-name"
                   type="text"
                   v-model="targetUser.info.name"
@@ -43,7 +43,7 @@
             <div class="row">
               <div class="col-12 col-md-6">
                 <Input
-                    :label="'Password'" 
+                    :label="'Contraseña'" 
                     id="user-pw"
                     type="password"
                     v-model="targetUser.info.password"
@@ -55,7 +55,7 @@
               </div>
               <div class="col-12 col-md-6">
                 <Input
-                    :label="'Repeat password'" 
+                    :label="'Repite la Contraseña'" 
                     id="user-pw-r"
                     type="password"
                     :required="addForm || newPassword"
@@ -70,7 +70,7 @@
             <div class="row" v-if="!addForm">
               <div class="col-12 col-md-6">
                 <Input
-                    :label="'Current password'" 
+                    :label="'Contraseña Actual'" 
                     id="user-pw-o"
                     type="password"
                     v-model="oldPassword"
@@ -97,7 +97,7 @@
               </div>
               <div class="col-12 col-md-6">
                 <SwitchBordered 
-                  :label="'Establish account as'"
+                  :label="'Establecer la cuenta como'"
                   id="user-status"
                   :message="switchStatus"
                   :claseMessage="switchClass"
@@ -109,7 +109,7 @@
             <div class="d-flex justify-content-center mt-4">
               <button type="submit" class="btn" :class="addForm? 'btn-success':'btn-primary'" :disabled="!isUserAdmin">
                 <i :class="addForm? 'fas fa-user-plus':'fas fa-edit'"></i>
-                <span>{{ addForm? ' Add user':' Edit user' }}</span>
+                <span>{{ addForm? ' Agregar Usuario':' Editar Usuario' }}</span>
               </button>
             </div>
           </form>
@@ -168,7 +168,7 @@
           :disabled="!isUserAdmin"
         >
           <i class="fas fa-plus-circle"></i>
-          <span class="d-none d-md-inline"> Add User</span>
+          <span class="d-none d-md-inline"> Agregar Usuario</span>
         </button>
       </template>
     </Table>
@@ -199,7 +199,7 @@ export default {
       rows: [],
       columns: [
         {
-          label: 'Name',
+          label: 'Nombre',
           field: "name",
           type: "text",
           class: "text-center"
@@ -211,37 +211,37 @@ export default {
           class: "text-center"
         },
         {
-          label: 'Status',
+          label: 'Estado',
           field: "status",
           type: "html",
           class: "text-center"
         },
         {
-          label: 'Role',
+          label: 'Rol',
           field: "role",
           type: "text",
           class: "text-center"
         },
         {
-          label: 'Sessions',
+          label: 'Sesiones',
           field: "sessions",
           type: "number",
           class: "text-center"
         },
         {
-          label: 'Last access',
+          label: 'Ultimo acceso',
           field: "lastAccess",
           type: "text",
           class: "text-center"
         },
         {
-          label: 'Created at',
+          label: 'Fecha Creacion',
           field: "createdAt",
           type: "text",
           class: "text-center"
         },
         {
-          label: 'Actions',
+          label: 'Acciones',
           field: 'action',
           class: "text-center"
         },
@@ -278,7 +278,7 @@ export default {
   },
   computed: {
     userModalTitle: function(){
-      return this.addForm? 'Add user':'Edit user';
+      return this.addForm? 'Agregar Usuario':'Editar Usuario';
     },
     switchStatus: function(){
       return this.targetUser.info.status? 'Active':'Inactive';
@@ -348,7 +348,7 @@ export default {
       let newRowSet = [];
       for(const user of userdata){
         let insertEntry = {
-          name: user.info.name,
+          name: user.info.nombre_usuario,
           email: user.info.email,
           status: user.info.status? `<span class="text-success">Active</span>` : `<span class="text-danger">Not active</span>`,
           role: user.role.alias,

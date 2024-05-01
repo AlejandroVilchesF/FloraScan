@@ -38,7 +38,7 @@ export default {
   computed: {
     username: function(){
       if(useUsersStore().v_userdata && useUsersStore().v_userdata.info)
-      return useUsersStore().v_userdata.info.name;
+      return useUsersStore().v_userdata.info.nombre_usuario;
     },
     rolename: function(){
       if(useUsersStore().v_userdata  && useUsersStore().v_userdata.role)
