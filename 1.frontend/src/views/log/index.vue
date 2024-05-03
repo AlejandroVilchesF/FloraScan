@@ -35,7 +35,7 @@
           @onPerPageChange="onPerPageChange"
         >
           <template v-slot:top-right-addon>
-            {{ 'Entries found: ' }}{{ totalRecords }}
+            {{ 'Entradas: ' }}{{ totalRecords }}
           </template>
         </Table>
       </template>

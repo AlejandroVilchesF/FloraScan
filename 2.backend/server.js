@@ -61,3 +61,4 @@ db.mongoose
 require("./app/routes/user.routes")(app);
 require("./app/routes/auth.routes")(app);
 require("./app/routes/system.log.routes")(app);
+require("./app/routes/detection.routes")(app);

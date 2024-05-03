@@ -32,7 +32,7 @@ exports.notifyClients = (eventData, refEvent) => {
   
       client.write(`data: ${JSON.stringify(combinedData)}\n\n`);
     });
-  };
+};
 
 // Evento de subscripcion a eventos
 /////////////////////////////////////
