@@ -97,13 +97,13 @@ const routes = [
         }
       },
       {
-        path: 'private',
-        name: 'private',
-        component: () => import('@/views/private'),
+        path: 'identificacion',
+        name: 'identificacion',
+        component: () => import('@/views/identify'),
         meta: {
-          title: 'Restringido',
-          breadCrumb: 'Restringido',
-          action: 'PRIVATE_SEE',
+          title: 'Identificacion',
+          breadCrumb: 'identificacion',
+          action: 'USER_SELF',
           guest: false
         }
       }

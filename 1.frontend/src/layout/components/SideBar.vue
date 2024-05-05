@@ -24,17 +24,17 @@
         </li>
       </router-link>
 
-      <router-link :to="{ name: 'private' }" class="routerLink"  v-if="isLogged && allowedRoute('PRIVATE_SEE', 'admin')">
+      <router-link :to="{ name: 'identificacion' }" class="routerLink"  v-if="isLogged && allowedRoute('PRIVATE_SEE', 'admin')">
         <li
           class="sidebar-item"
-          :class="{ active: isCurrentRoute('private') }"
+          :class="{ active: isCurrentRoute('identificacion') }"
         >
           <a class="sidebar-link">
             <i 
-              class="bi bi-lock me-2 opacity-50"
-              data-theme-icon="bi-lock"
+              class="bi bi-flower1 me-2 opacity-50"
+              data-theme-icon="bi-flower1"
             ></i>
-            <span class="align-middle">{{ 'Restringido' }}</span>
+            <span class="align-middle">{{ 'Identificación' }}</span>
           </a>
           
         </li>

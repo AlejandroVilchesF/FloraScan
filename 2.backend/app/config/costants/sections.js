@@ -1,6 +1,6 @@
 const SECTIONS = [
     {
-        name: "Restringido",
+        name: "Identificacion",
         binary: true,
         actions: {
             see: { keyword: "PRIVATE_SEE" },

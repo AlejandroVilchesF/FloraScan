@@ -17,7 +17,7 @@ exports.identify = async (req, res) => {
 
         // Constantes para la identificación
         const IMAGE = `/home/backend/app/data/${fileName}`;
-        const ORGAN = 'auto';
+        const ORGAN = req.body.flowerOrgan;
 
         // Crear objeto FormData
         let form = new FormData();
