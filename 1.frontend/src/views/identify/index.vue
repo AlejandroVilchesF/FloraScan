@@ -47,20 +47,49 @@
             </Modal>
         </div>
     </div>
+    <Spinner v-if="waitingPrediction"></Spinner>
+    <!-- Card de muestra de Imagenes -->
+    <div class="card my-3" v-if="plantsIdentify.length > 0" v-for="(item, index) in plantsIdentify.slice(0, 3)">
+        <div class="card-header">
+            <h5 class="card-title mb-0">{{ item.species.scientificNameWithoutAuthor }}
+                <em class="text-muted" style="font-size: 12px !important;">{{ (item.score * 100).toFixed(2) }}%</em>
+            </h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item listHover" v-for="(img, imgIndex) in item.images" :key="imgIndex">
+                    <img class="img-fluid" :src="img.url.s" @click="showModal(index, imgIndex)">
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar la imagen en grande -->
+    <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="false" :frameless="true">
+        <template v-slot:modalBody>
+            <img class="img-fluid" :src="largeImage" alt="Imagen original">
+        </template>
+    </Modal>
+
 </template>
 
 <script>
 import DetectionService from "../../services/DetectionService";
 import Modal from "../../components/commons/Modal.vue";
+import Spinner from "../../components/commons/Spinner.vue";
 export default {
     components: {
-        Modal
+        Modal,
+        Spinner
     },
     data() {
         return {
             fileSelected: true,
             flowerOrgan: 'auto',
-            organImage: ""
+            organImage: "",
+            plantsIdentify: [],
+            largeImage: "",
+            waitingPrediction: false
         };
     },
     mounted() { },
@@ -68,18 +97,28 @@ export default {
     watch: {},
     methods: {
         getIdentification() {
+            this.waitingPrediction=true;
             const fileInput = this.$refs.fileInput;
             const file = fileInput.files[0];
             const reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = async (event) => {
                 const fileContent = event.target.result;
                 const formData = new FormData();
                 formData.append('fileName', file.name);
                 formData.append('fileContent', fileContent);
                 formData.append('flowerOrgan', this.flowerOrgan);
-                DetectionService.identify(formData);
+                try {
+                    // Llamar al método identify y esperar la respuesta
+                    const response = await DetectionService.identify(formData);
+                    // Asignar la respuesta a la variable plantsIdentify
+                    this.plantsIdentify = response.data;
+                    this.waitingPrediction=false;
+                    console.log(this.plantsIdentify);
+                } catch (error) {
+                    // Manejar cualquier error que ocurra durante la llamada a DetectionService.identify
+                    console.error("Error al identificar plantas:", error);
+                }
             }
-
             reader.readAsDataURL(file);
         },
         updateButton() {
@@ -91,13 +130,20 @@ export default {
             this.$refs.flowerModal.closeModal();
             this.organImage = require(`@/assets/img/organs/${valor}.png`);
         },
-        deleteOrgan(){
+        deleteOrgan() {
             this.organImage = "";
             this.flowerOrgan = "auto";
             this.$refs.flowerModal.openModal();
+        },
+        showModal(itemIndex, imgIndex) {
+            // Obtener la URL de la imagen en grande
+            this.largeImage = this.plantsIdentify[itemIndex].images[imgIndex].url.o;
+            // Abrir el modal
+            this.$refs.imageModal.openModal();
         }
     }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

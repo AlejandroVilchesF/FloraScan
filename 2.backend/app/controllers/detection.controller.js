@@ -34,11 +34,11 @@ exports.identify = async (req, res) => {
         );
         //Si el codigo de respuesta es el 200 devolvemos los datos y borramos la imagen
         if (status === 200) {
-            console.log('data', data.results[0]);
             fs.unlink(IMAGE, (err) => {
                 if (err) throw err;
                 console.log(`${IMAGE} ha sido borrado`);
             });
+            return res.status(200).send({ data:data.results, code: 2001 });
         } else {
             console.log(`${status}: No se ha conseguido completar la peticion`);
         }

@@ -353,6 +353,10 @@ body {
     background-color: #101f4a !important;
   }
 
+  .listHover:hover{
+    box-shadow: 1px 1px 3px white;
+    transition: 0.5s;
+  }
 }
 
 @include color-mode(light) {
@@ -423,5 +427,10 @@ body {
   .sidebar-item.active>.sidebar-link span,
   .sidebar-item.active>.sidebar-link svg {
     color: #292929;
+  }
+
+  .listHover:hover{
+    box-shadow: 1px 1px 3px black;
+    transition: 0.5s;
   }
 }
