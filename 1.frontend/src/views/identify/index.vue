@@ -47,7 +47,9 @@
             </Modal>
         </div>
     </div>
-    <Spinner v-if="waitingPrediction"></Spinner>
+    <div>
+        <Spinner v-if="waitingPrediction"></Spinner>
+    </div>
     <!-- Card de muestra de Imagenes -->
     <div class="card my-3" v-if="plantsIdentify.length > 0" v-for="(item, index) in plantsIdentify.slice(0, 3)">
         <div class="card-header">
@@ -55,6 +57,7 @@
                 <em class="text-muted" style="font-size: 12px !important;">{{ (item.score * 100).toFixed(2) }}%</em>
             </h5>
         </div>
+        <!-- Cardbody muestra de imagenes -->
         <div class="card-body">
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item listHover" v-for="(img, imgIndex) in item.images" :key="imgIndex">
@@ -62,15 +65,24 @@
                 </li>
             </ul>
         </div>
+        <!-- Cardfooter de muestra de imagenes con enlaces a la informacion/colaboracion -->
+        <div class="card-footer">
+            <router-link :to="{ name: 'inicio' }">
+                <a>
+                    <i class="bi bi-search me-2" data-theme-icon="bi-search"></i>
+                    <span class="align-middle">{{ 'Inicio' }}</span>
+                </a>
+            </router-link>
+        </div>
     </div>
-
-    <!-- Modal para mostrar la imagen en grande -->
-    <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="false" :frameless="true">
-        <template v-slot:modalBody>
-            <img class="img-fluid" :src="largeImage" alt="Imagen original">
-        </template>
-    </Modal>
-
+    <div>
+        <!-- Modal para mostrar la imagen en grande -->
+        <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="false" :frameless="true">
+            <template v-slot:modalBody>
+                <img class="img-fluid" :src="largeImage" alt="Imagen original">
+            </template>
+        </Modal>
+    </div>
 </template>
 
 <script>
@@ -97,7 +109,7 @@ export default {
     watch: {},
     methods: {
         getIdentification() {
-            this.waitingPrediction=true;
+            this.waitingPrediction = true;
             const fileInput = this.$refs.fileInput;
             const file = fileInput.files[0];
             const reader = new FileReader();
@@ -112,7 +124,7 @@ export default {
                     const response = await DetectionService.identify(formData);
                     // Asignar la respuesta a la variable plantsIdentify
                     this.plantsIdentify = response.data;
-                    this.waitingPrediction=false;
+                    this.waitingPrediction = false;
                     console.log(this.plantsIdentify);
                 } catch (error) {
                     // Manejar cualquier error que ocurra durante la llamada a DetectionService.identify
@@ -145,5 +157,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

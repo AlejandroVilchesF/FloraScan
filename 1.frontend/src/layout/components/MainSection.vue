@@ -36,7 +36,9 @@
       <router-view v-slot="{ Component, route }">
         <!-- Use any custom transition and  to `fade` -->
         <transition name="fade" mode="out-in">
-          <component :is="Component" :key="route.path"/>
+          <div>
+            <component :is="Component" :key="route.path"/>
+          </div>
         </transition>
       </router-view>
     </div>

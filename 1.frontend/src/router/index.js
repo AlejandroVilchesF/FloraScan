@@ -23,7 +23,6 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    // usar el metodo component:() para lazy loading y reducir peso web
     component: () => import('@/views/login'),
     async beforeEnter(to, from, next) {
       if(useUsersStore().token){
@@ -102,7 +101,18 @@ const routes = [
         component: () => import('@/views/identify'),
         meta: {
           title: 'Identificacion',
-          breadCrumb: 'identificacion',
+          breadCrumb: 'Identificacion',
+          action: 'USER_SELF',
+          guest: false
+        }
+      },
+      {
+        path: 'contribuir',
+        name: 'contribuir',
+        component: () => import('@/views/contribute'),
+        meta: {
+          title: 'Contribuir',
+          breadCrumb: 'Contribuir',
           action: 'USER_SELF',
           guest: false
         }
