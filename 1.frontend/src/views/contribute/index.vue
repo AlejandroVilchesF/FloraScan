@@ -1,11 +1,15 @@
 <template>
-    <div class="card my-3">
+    <div class="card my-2">
         <div class="card-header">
-            <h5 class="card-title mb-0">{{ 'Contribución' }}</h5>
+            <h5 class="card-title mb-0">{{ 'Formulario de contribución' }}</h5>
         </div>
         <div class="card-body">
-            <!-- <p>Con esta contribución nos ayuda a ampliar el conocimiento almacenado en FloraScan</p> -->
-            <form>
+            <p> Con esta contribución nos ayuda a ampliar el conocimiento almacenado en FloraScan.
+                <br>
+                Por favor introduce los datos de la nueva planta.
+            </p>
+            <hr />
+            <form ref="plantForm">
                 <!-- Primera Fila -->
                 <div class="row">
                     <div class="col-md-6 col-12">
@@ -13,7 +17,7 @@
                             :required="true" icon="fa-solid fa-flask"></Input>
                     </div>
                     <div class="col-md-6 col-12">
-                        <Input :label="'Nombre Comun'" id="commonName" type="text" v-model="commonName" :required="true"
+                        <Input :label="'Nombre Común'" id="commonName" type="text" v-model="commonName" :required="true"
                             icon="fa-solid fa-comment"></Input>
                     </div>
                 </div>
@@ -44,29 +48,37 @@
     <div class="row">
         <!-- Descripcion -->
         <div class="col-md-6 col-12">
-            <div class="card my-3">
+            <div class="card my-2">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">{{ 'Descripcion' }}</h5>
+                    <h5 class="card-title mb-0">{{ 'Descripción' }} 
+                        <em class="small text-muted">Introduce una descripción</em>
+                    </h5>
                 </div>
                 <div class="card-body">
-                    <label for="description" class="form-label">Introduce una descripcion</label>
-                    <br />
-                    <textarea v-model="description" id="description" class="form-control mb-3" cols="30"
-                        rows="10"></textarea>
+                    <div class="fluid-wrapper">
+                        <textarea v-model="description" id="description" class="form-control mb-3 h-100"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success w-100"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
                 </div>
             </div>
         </div>
         <!-- Ubicacion -->
         <div class="col-md-6 col-12">
-            <div class="card my-3">
+            <div class="card my-2">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">{{ 'Ubicacion' }}</h5>
+                    <h5 class="card-title mb-0">{{ 'Ubicación' }}
+                        <em class="small text-muted">Selecciona una ubicación</em>
+                    </h5>
                 </div>
                 <div class="card-body">
-                    <label for="ubication" class="form-label">Selecciona una ubicación</label>
-                    <br />
-                    <textarea v-model="ubication" id="ubication" class="form-control mb-3" cols="30"
-                        rows="10"></textarea>
+                    <div class="fluid-wrapper">
+                        <Leafletmap ref="map" @mapClick="handleMapClick"></Leafletmap>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger w-100"><i class="fa-solid fa-trash"></i> Reiniciar</button>
                 </div>
             </div>
         </div>
@@ -75,9 +87,11 @@
 
 <script>
 import Input from "@/components/commons/Input.vue";
+import Leafletmap from "@/components/maps/Leafletmap.vue";
 export default {
     components: {
         Input,
+        Leafletmap
     },
     data() {
         return {
@@ -86,14 +100,26 @@ export default {
             family: "",
             genus: "",
             description: "",
-            ubication:[]
+            ubication: []
         };
     },
     mounted() { },
     computed: {},
     watch: {},
-    methods: {}
+    methods: {
+        saveInformation() {
+
+        },
+        handleMapClick(){
+            this.ubication=[this.$refs.map.lat,this.$refs.map.lng]
+            console.log(this.ubication);
+        }
+    }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.fluid-wrapper{
+    height: calc(100vh - 200px);
+}
+</style>

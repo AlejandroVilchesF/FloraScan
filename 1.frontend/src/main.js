@@ -1,11 +1,5 @@
 /* Hacemos las importaciones generales de nuestra instancia
-   en VUE. Las importaciones que se hagan aquí no disponen de
-   Lazy Load. Es decir se cargaran a la hora de renderizar la aplicación
-   y servirán para todo el contexto
-
-   Evitar importar todo lo que se pueda para dismunir el peso de la web,
-   intenad buscar versiones .min, o cargar unicamente lo indispensable
-   import '@fortawesome/fontawesome-free/js/solid.min.js'
+   en VUE.
  */
 
 window.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = true;

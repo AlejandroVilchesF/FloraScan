@@ -20,13 +20,16 @@
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.9",
     "echarts": "^5.4.3",
+    "exceljs": "^4.3.0",
+    "leaflet": "^1.9.4",
+    "leaflet-easybutton": "^2.4.0",
+    "leaflet.fullscreen": "^3.0.2",
     "pinia": "^2.1.6",
     "sass": "^1.64.1",
     "sass-loader": "^13.3.2",
     "vue": "^3.3.4",
     "vue-echarts": "^6.6.0",
-    "vue-router": "^4.2.4",
-    "exceljs": "^4.3.0"
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@vue/cli-service": "^5.0.8"
