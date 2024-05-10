@@ -82,7 +82,7 @@ export default {
             });
         },
         newMarker(lat,lng){
-            this.mapMarkers.forEach(el => { this.map.removeLayer(el)});
+            this.removeMarkers();
             let myIcon=L.icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -93,6 +93,9 @@ export default {
             });
            let marker =  L.marker([lat, lng],{icon:myIcon}).addTo(this.map);
            this.mapMarkers.push(marker);
+        },
+        removeMarkers(){
+            this.mapMarkers.forEach(el => { this.map.removeLayer(el)});
         }
     }
 };
@@ -102,5 +105,8 @@ export default {
 #map{
     height: 100%;
     width: 100%;
+}
+#map:hover{
+    cursor: pointer;
 }
 </style>

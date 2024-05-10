@@ -125,7 +125,6 @@ export default {
                     // Asignar la respuesta a la variable plantsIdentify
                     this.plantsIdentify = response.data;
                     this.waitingPrediction = false;
-                    console.log(this.plantsIdentify);
                 } catch (error) {
                     // Manejar cualquier error que ocurra durante la llamada a DetectionService.identify
                     console.error("Error al identificar plantas:", error);
