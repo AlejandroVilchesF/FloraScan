@@ -14,10 +14,10 @@
                 <div class="row">
                     <div class="col-md-6 col-12">
                         <Input :label="'Nombre Científico'" id="cientificiName" type="text" v-model="cientificName"
-                            :required="true" icon="fa-solid fa-flask"></Input>
+                            :required="true" icon="fa-solid fa-flask" :additionalClass="cientificCheck? 'bg-danger':''"></Input>
                     </div>
                     <div class="col-md-6 col-12">
-                        <Input :label="'Nombre Común'" id="commonName" type="text" v-model="commonName" :required="true"
+                        <Input :label="'Nombre Común'" id="commonName" type="text" v-model="commonName" :required="false"
                             icon="fa-solid fa-comment"></Input>
                     </div>
                 </div>
@@ -25,18 +25,18 @@
                 <div class="row">
                     <div class="col-md-6 col-12">
                         <Input :label="'Familia'" id="family" type="text" v-model="family" :required="true"
-                            icon="fa-solid fa-people-group"></Input>
+                            icon="fa-solid fa-people-group" :additionalClass="familyCheck? 'bg-danger':''"></Input>
                     </div>
                     <div class="col-md-6 col-12">
                         <Input :label="'Género'" id="genus" type="text" v-model="genus" :required="true"
-                            icon="fa-solid fa-clipboard-list"></Input>
+                            icon="fa-solid fa-clipboard-list" :additionalClass="genusCheck? 'bg-danger':''"></Input>
                     </div>
                 </div>
                 <!-- Tercera Fila -->
                 <div class="row">
                     <div class="col-md-6 col-12">
                         <label for="plantImage" class="form-label">Selecciona una imagen</label>
-                        <input class="form-control mb-3" type="file" ref="plantImage" id="plantImage">
+                        <input class="form-control mb-3" type="file" ref="plantImage" id="plantImage" :class="genusCheck? 'bg-danger':''">
                     </div>
                     <div class="col-md-6 col-12">
                     </div>
@@ -74,7 +74,7 @@
                         <em class="small text-muted">Selecciona una ubicación</em>
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body" :class="ubicationCheck? 'bg-danger':''">
                     <div class="fluid-wrapper">
                         <Leafletmap ref="map" @mapClick="handleMapClick"></Leafletmap>
                     </div>
@@ -94,7 +94,7 @@
         </div>
         <div class="card-body">
             <ul class="list-group">
-                <li class="list-group-item bg-danger" v-for="(item) in errors"> {{ item.message }}</li>
+                <li class="list-group-item bg-danger" v-for="(item) in errors"> {{ item }}</li>
             </ul>
         </div>
     </div>
@@ -117,7 +117,12 @@ export default {
             description: "",
             image: null,
             ubication: [],
-            errors: []
+            errors: [],
+            cientificCheck:false,
+            familyCheck:false,
+            genusCheck:false,
+            plantImageCheck:false,
+            ubicationCheck:false
         };
     },
     mounted() { },
@@ -178,27 +183,32 @@ export default {
         },
         validateForm() {
             if (!this.cientificName) {
-                this.errors.push({message:"El nombre cientifico no puede estar vacio",id:1});
+                this.errors.push("El nombre cientifico no puede estar vacio");
+                this.cientificCheck=true;
             }
 
             if (!this.family) {
-                this.errors.push({message:"Debe incluir la familia en su contribucion",id:2});
+                this.errors.push("Debe incluir la familia en su contribucion");
+                this.familyCheck=true;
             }
 
             if (!this.genus) {
-                this.errors.push({message:"Debe incluir el genero en su contribucion",id:3});
+                this.errors.push("Debe incluir el genero en su contribucion");
+                this.genusCheck=true;
             }
 
             if (!this.image) {
-                this.errors.push({message:"La imagen de la planta no debe estar vacia",id:4});
+                this.errors.push("La imagen de la planta no debe estar vacia");
+                this.plantImageCheck=true;
             }
 
             if (this.ubication.length === 0) {
-                this.errors.push({message:"Debe seleccionar la ubicacion desde donde tomo la imagen",id:5});
+                this.errors.push("Debe seleccionar la ubicacion desde donde tomo la imagen");
+                this.ubicationCheck=true;
             }
 
             return this.errors.length === 0;
-        }
+        },
     }
 };
 </script>
