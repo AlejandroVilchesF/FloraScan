@@ -25,6 +25,14 @@ const SECTIONS = [
         binary: false,
         actions: { admin: { keyword: "PANEL_ADMIN" } }
     },
+    {
+        name: "Contribucion",
+        binary: true,
+        actions: {
+            see: { keyword: "PRIVATE_SEE" },
+            admin: { keyword: "PRIVATE_ADMIN" }
+        }
+    }
 ];
 
 

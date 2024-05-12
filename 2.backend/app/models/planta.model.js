@@ -29,6 +29,16 @@ module.exports = (mongoose) => {
     },
     { versionKey: false, timestamps: true }
   );
+
+  // Hook para convertir las cadenas de texto a minúsculas antes de guardar
+  schema.pre('save', function(next) {
+    this.nombre_cientifico = this.nombre_cientifico.toLowerCase();
+    this.nombre_comun = this.nombre_comun.toLowerCase();
+    this.familia = this.familia.toLowerCase();
+    this.genero = this.genero.toLowerCase();
+    next();
+  });
+
   const Planta = mongoose.model("plantas", schema);
   return Planta;
 };

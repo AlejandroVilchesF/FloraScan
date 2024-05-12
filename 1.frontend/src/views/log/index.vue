@@ -97,7 +97,8 @@ export default {
         'USER UPDATE',
         'SELF UPDATE',
         'ROLE CREATE',
-        'ROLE UPDATE'
+        'ROLE UPDATE',
+        'PLANT CREATE'
       ],
       dangerLogs: [
         'USER DELETE',
@@ -122,6 +123,7 @@ export default {
         {key: 'USER DELETE', value: 'USER DELETE'},
         {key: 'SELF DELETE', value: 'SELF DELETE'},
         {key: 'ROLE DELETE', value: 'ROLE DELETE'},
+        {key: 'PLANT CREATE', value: 'PLANT CREATE'},
         {key: 'PERMISSION VIOLATION', value: 'PERMISSION VIOLATION'},
       ]
     };
