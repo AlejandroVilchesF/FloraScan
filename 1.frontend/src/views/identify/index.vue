@@ -67,12 +67,10 @@
         </div>
         <!-- Cardfooter de muestra de imagenes con enlaces a la informacion/colaboracion -->
         <div class="card-footer">
-            <router-link :to="{ name: 'inicio' }">
-                <a>
-                    <i class="bi bi-search me-2" data-theme-icon="bi-search"></i>
-                    <span class="align-middle">{{ 'Inicio' }}</span>
-                </a>
-            </router-link>
+            <a class="router-link" @click="seeDetails(item.species.scientificNameWithoutAuthor)">
+                <i class="bi bi-search me-2" data-theme-icon="bi-search"></i>
+                <span class="align-middle">{{ 'Ver detalles' }}</span>
+            </a>
         </div>
     </div>
     <div>
@@ -82,6 +80,25 @@
                 <img class="img-fluid" :src="largeImage" alt="Imagen original">
             </template>
         </Modal>
+        <!-- Modal de detalles de la planta -->
+        <Modal ref="plantDetails" id="plantDetails" :title="detailsTitle" :footer="false" :frameless="true">
+            <template v-slot:modalBody>
+                <div class="row">
+                    <div class="col-12 col-md-9">
+                        <p class="text-start">{{ detailsDescription }}</p>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <img :src="detailsImage" class="image-fluid" />
+                    </div>
+                </div>
+                <div>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">Familia: {{ detailsFamily }}</li>
+                        <li class="list-group-item">Genero: {{ detailsGenus }}</li>
+                    </ul>
+                </div>
+            </template>
+        </Modal>
     </div>
 </template>
 
@@ -89,6 +106,8 @@
 import DetectionService from "../../services/DetectionService";
 import Modal from "../../components/commons/Modal.vue";
 import Spinner from "../../components/commons/Spinner.vue";
+import PlantService from "../../services/PlantService";
+
 export default {
     components: {
         Modal,
@@ -101,7 +120,13 @@ export default {
             organImage: "",
             plantsIdentify: [],
             largeImage: "",
-            waitingPrediction: false
+            waitingPrediction: false,
+            detailsTitle: "",
+            detailsCommon: "",
+            detailsDescription: "",
+            detailsImage: "",
+            detailsFamily: "",
+            detailsGenus: "",
         };
     },
     mounted() { },
@@ -151,9 +176,43 @@ export default {
             this.largeImage = this.plantsIdentify[itemIndex].images[imgIndex].url.o;
             // Abrir el modal
             this.$refs.imageModal.openModal();
+        },
+        async seeDetails(plantName) {
+            try {
+                this.restartDetails();
+                this.$refs.plantDetails.openModal();
+                const response = await PlantService.getPlant(plantName.toLowerCase());
+                this.detailsTitle = this.capitalize(response.data.nombre_cientifico);
+                this.detailsCommon = response.data.nombre_comun ? this.capitalize(response.data.nombre_comun) : "";
+                this.detailsFamily = this.capitalize(response.data.familia);
+                this.detailsGenus = this.capitalize(response.data.genero);
+                this.detailsImage = response.data.imagenes[0];
+                this.detailsDescription = response.data.descripcion;
+            } catch (error) {
+                console.error("Error al obtener los detalles de la planta");
+            }
+        },
+        restartDetails() {
+            this.detailsTitle = "";
+            this.detailsCommon = "";
+            this.detailsFamily = "";
+            this.detailsGenus = "";
+            this.detailsImage = "";
+            this.detailsDescription = "";
+        },
+        capitalize(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
         }
     }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.router-link {
+    text-decoration: none !important;
+}
+
+.router-link:hover {
+    cursor: pointer !important;
+}
+</style>

@@ -48,7 +48,7 @@ authRoute = async (req, res, next, allowedActions, self) => {
       // Remove user token
       let token = req.headers["x-access-token"];
       await User.updateOne({ _id: tokenedUser._id }, { $pull: { token: token } });
-      await PostLog('PERMISSION VIOLATION', `El usuario ${res.locals.tokenedUser.info.name} ha intentado hacer una accion no permitida`, res.locals.tokenedUser._id);
+      await PostLog('PERMISSION VIOLATION', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha intentado hacer una accion no permitida`, res.locals.tokenedUser._id);
       return res.status(401).send({ message: "Peticion no permitida", code: 3000 });
     }
   }

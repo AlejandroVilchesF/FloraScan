@@ -105,7 +105,7 @@
 <script>
 import Input from "@/components/commons/Input.vue";
 import Leafletmap from "@/components/maps/Leafletmap.vue";
-import ContributionService from "../../services/ContributionService";
+import PlantService from "../../services/PlantService";
 
 export default {
     components: {
@@ -177,7 +177,7 @@ export default {
                         ubication: this.ubication
                     }
                     try {
-                        await ContributionService.newPlant(body);
+                        await PlantService.newPlant(body);
                     } catch (error) {
                         console.error("Error al crear una nueva planta");
                     }

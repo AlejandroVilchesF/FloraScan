@@ -18,7 +18,7 @@
                   :label="'Nombre de Usuario'" 
                   id="user-name"
                   type="text"
-                  v-model="targetUser.info.name"
+                  v-model="targetUser.info.nombre_usuario"
                   icon="fas fa-user"
                   :required="true"
                   :minlength="1"
@@ -366,7 +366,7 @@ export default {
       this.targetUser.info.password = null;
       this.passwordRepeat = null;
       this.oldPassword = null;
-      this.targetUser.info.name = user? user.info.name : null;
+      this.targetUser.info.nombre_usuario = user? user.info.nombre_usuario : null;
       this.targetUser.info.email = user? user.info.email : null;
       this.targetUser.info.status = user? user.info.status : null;
       this.targetUser.role = user? user.role._id : this.roles[0]?._id;

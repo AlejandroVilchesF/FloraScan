@@ -14,7 +14,7 @@ exports.newAccount = async (req, res) => {
     let isAdmin = isUserAdmin(res);
     // Super admin 
     let isSuper = isSuperAdmin(res);
-    if (!req.body.info.name || !req.body.info.email || !req.body.info.password) {
+    if (!req.body.info.nombre_usuario || !req.body.info.email || !req.body.info.password) {
       return res.status(400).send({ message: 'Peticion incompleta', code: 3000 });
     } else {
       // Super admin role can only be assigned by another super admin
@@ -23,7 +23,7 @@ exports.newAccount = async (req, res) => {
       }
       const newUser = new User({
         info: {
-          nombre_usuario: req.body.info.name,
+          nombre_usuario: req.body.info.nombre_usuario,
           email: req.body.info.email,
           status: req.body.info.status != undefined && isAdmin? req.body.info.status : false,
           password: authContr.encryptPassword(req.body.info.password)
@@ -32,7 +32,7 @@ exports.newAccount = async (req, res) => {
       });
       try{
         await newUser.save();
-        await PostLog('USER CREATE', `El usuario ${res.locals.tokenedUser.info.name} ha creado un nuevo usuario: ${newUser.info.name}`, res.locals.tokenedUser._id);
+        await PostLog('USER CREATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha creado un nuevo usuario: ${newUser.info.nombre_usuario}`, res.locals.tokenedUser._id);
         return res.status(200).send({ message: 'Usuario creado con exito', code: 2000 });
       }catch(saveError){
         if(saveError.code == 11000){
@@ -51,14 +51,14 @@ exports.newAccount = async (req, res) => {
 
 exports.registerAccount = async (req, res) => {
   try {
-    if (!req.body.info.name || !req.body.info.email || !req.body.info.password) {
+    if (!req.body.info.nombre_usuario || !req.body.info.email || !req.body.info.password) {
       return res.status(400).send({ message: 'Peticion incompleta', code: 3000 });
     } else if (!req.body.info.email.includes("@")) {
       return res.status(400).send({ message: 'Email con formato incorrecto', code: 3000 });
     } else {
       const newUser = new User({
         info: {
-          nombre_usuario: req.body.info.name,
+          nombre_usuario: req.body.info.nombre_usuario,
           email: req.body.info.email,
           status: false,
           password: authContr.encryptPassword(req.body.info.password)
@@ -167,7 +167,7 @@ exports.update = async (req, res) => {
     }
     
     // User assigned name
-    let assignedName =  userdata.info.name;
+    let assignedName =  userdata.info.nombre_usuario;
     // User assigned email
     let assignedEmail = userdata.info.email;
     if(assignedEmail != targetUser.info.email && !isAdmin){
@@ -225,9 +225,9 @@ exports.update = async (req, res) => {
       // Execute update and return updated user
       const updatedUser = await User.findOneAndUpdate( { _id: targetId }, updateSchema, { new: true }).populate('role');
       if(updatedUser._id.toString() != res.locals.tokenedUser._id.toString()){
-        await PostLog('USER UPDATE', `El usuario ${res.locals.tokenedUser.info.name} ha actualizado el usuario: ${updatedUser.info.name}`, res.locals.tokenedUser._id);
+        await PostLog('USER UPDATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha actualizado el usuario: ${updatedUser.info.nombre_usuario}`, res.locals.tokenedUser._id);
       }else{
-        await PostLog('SELF UPDATE', `El usuario ${updatedUser.info.name} ha actualizado su informacion`, updatedUser._id);
+        await PostLog('SELF UPDATE', `El usuario ${updatedUser.info.nombre_usuario} ha actualizado su informacion`, updatedUser._id);
       }
       return res.status(200).send({ message: 'Usuario actualizado con exito', data: updatedUser, code: 2000 });
     }catch(updateError){
@@ -303,7 +303,7 @@ exports.delete = async (req, res) => {
         return res.status(403).send({ message: 'No se puede eliminar un usuario con el rol super admin', code: 3000 });
       }
       const deletedUser = await User.findOneAndDelete({ _id: req.params.id });
-      await PostLog('USER DELETE', `El usuario ${res.locals.tokenedUser.info.name} ha eliminado el usuario: ${deletedUser.info.name}`, res.locals.tokenedUser._id);
+      await PostLog('USER DELETE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha eliminado el usuario: ${deletedUser.info.nombre_usuario}`, res.locals.tokenedUser._id);
       return res.status(200).send({ message: 'Usuario eliminado con exito', data: deletedUser, code: 2000 });
     }
   } catch (err) {
@@ -320,7 +320,7 @@ exports.deleteSelf = async (req, res) => {
       return res.status(403).send({message: 'El usuario por defecto no se puede eliminar', code: 3000});
     }else{
       await User.deleteOne({ _id: id });
-      await PostLog('SELF DELETE', `El usuario ${res.locals.tokenedUser.info.name} ha eliminiado su cuenta`, null);
+      await PostLog('SELF DELETE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha eliminiado su cuenta`, null);
       return res.status(200).send({ message: 'Cuenta elminiada con exito', code: 2000 });
     }
   } catch (err) {
@@ -356,7 +356,7 @@ exports.createRole = async (req, res) => {
     });
     try{
       await newRole.save();
-      await PostLog('ROLE CREATE', `El usuario ${res.locals.tokenedUser.info.name} ha creado un nuevo rol: ${newRole.alias}`, res.locals.tokenedUser._id);
+      await PostLog('ROLE CREATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha creado un nuevo rol: ${newRole.alias}`, res.locals.tokenedUser._id);
       return res.status(200).send({ message: 'Rol creado con exito', code: 2000 });
     }catch(saveError){
       if(saveError.code == 11000){
@@ -394,7 +394,7 @@ exports.updateRole = async (req, res) => {
     try{
       // Execute update and return updated role
       const updatedRole = await Role.findOneAndUpdate( { _id: targetId }, updateSchema, { new: true });
-      await PostLog('ROLE UPDATE', `El usuario ${res.locals.tokenedUser.info.name} ha actualizado el rol: ${updatedRole.alias}`, res.locals.tokenedUser._id);
+      await PostLog('ROLE UPDATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha actualizado el rol: ${updatedRole.alias}`, res.locals.tokenedUser._id);
       return res.status(200).send({ message: 'Rol actualizado con exito', data: updatedRole, code: 2000 });
     }catch(updateError){
       if(updateError.code == 11000){
@@ -419,7 +419,7 @@ exports.deleteRole = async (req, res) => {
     }else{
       await User.updateMany({ role: targetId },{ role: DEFAULT_ROLES[2]._id.toString() });
       const deletedRole = await Role.findOneAndDelete({ _id: targetId });
-      await PostLog('ROLE DELETE', `El usuario ${res.locals.tokenedUser.info.name} ha eliminado el rol: ${deletedRole.alias}`, res.locals.tokenedUser._id);
+      await PostLog('ROLE DELETE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha eliminado el rol: ${deletedRole.alias}`, res.locals.tokenedUser._id);
       return res.status(200).send({ message: 'Rol eliminado con exito', data: deletedRole, code: 2000 });
     }
   } catch (err) {

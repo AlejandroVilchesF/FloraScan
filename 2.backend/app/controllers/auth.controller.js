@@ -163,7 +163,7 @@ async function activateAccount(req, res) {
 //     let token = jwt.sign({ 
 //       _id: FindUser._id, 
 //       email: FindUser.info.email, 
-//       name: FindUser.info.name, 
+//       name: FindUser.info.nombre_usuario, 
 //       role: FindUser.role
 //     }, config.secret, { expiresIn: 1800 });
 //     await User.updateOne({ _id: FindUser._id },{ recovery: token });
@@ -177,7 +177,7 @@ async function activateAccount(req, res) {
 //       console.log(mailerError);
 //       return res.status(403).send({ message: 'Email does not exist', code: 3000 });
 //     }
-//     await PostLog('RECOVERY REQUEST', `User ${FindUser.info.name} requested password recovery`, FindUser._id);
+//     await PostLog('RECOVERY REQUEST', `User ${FindUser.info.nombre_usuario} requested password recovery`, FindUser._id);
 //     return res.status(200).send({ message: 'Recovery submited', code: 2000 });
 //   } catch (err) {
 //     console.error("Auth controller: setRecoveryToken")

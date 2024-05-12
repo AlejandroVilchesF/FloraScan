@@ -1,4 +1,4 @@
-const Plant = require("../models/").planta;
+const Plant = require("../models").planta;
 const PostLog = require('./system.log.controller').postLog;
 
 // Método de inserccion de planta
@@ -16,7 +16,7 @@ exports.newPlant = async (req, res) => {
             familia: req.body.family,
             genero: req.body.genus,
             descripcion: req.body.description ? req.body.description : "",
-            imagenes: req.body.image.split(",")[1]
+            imagenes: req.body.image
         });
         //Try catch para controlar la accion con la base de datos
         try {
@@ -31,8 +31,23 @@ exports.newPlant = async (req, res) => {
             }
         }
     } catch (error) {
-        console.error("Contribution controller: newPlant")
+        console.error("Plant Contoller: newPlant")
         console.error(err);
         return res.status(500).send({ message: 'Error', code: 3000 });
     }
+};
+
+exports.getPlant = async (req , res) => {
+    try {
+        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.cientificName });
+        if (findPlant) {
+          return res.status(200).send({data: findPlant, code: 2001});
+        } else {
+          return res.status(200).send({message: 'Planta no encontrada', code: 3000});
+        }
+      } catch (err) {
+        console.error("Plant Contoller: getPlant")
+        console.error(err);
+        return res.status(500).send({ message: 'Error', code: 3000 });
+      }
 };

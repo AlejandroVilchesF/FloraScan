@@ -77,7 +77,7 @@ class UserService {
   registerAccount(username, useremail, userpassword){
     let body = {
       info: {
-        name: username,
+        nombre_usuario: username,
         email: useremail,
         password: userpassword
       }
