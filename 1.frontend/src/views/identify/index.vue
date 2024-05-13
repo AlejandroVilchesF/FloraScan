@@ -67,7 +67,7 @@
         </div>
         <!-- Cardfooter de muestra de imagenes con enlaces a la informacion/colaboracion -->
         <div class="card-footer">
-            <a class="router-link" @click="seeDetails(item.species.scientificNameWithoutAuthor)">
+            <a class="router-link" @click="seeDetails(item.species.scientificNameWithoutAuthor,index)">
                 <i class="bi bi-search me-2" data-theme-icon="bi-search"></i>
                 <span class="align-middle">{{ 'Ver detalles' }}</span>
             </a>
@@ -77,7 +77,7 @@
         <!-- Modal para mostrar la imagen en grande -->
         <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="false" :frameless="true">
             <template v-slot:modalBody>
-                <img class="img-fluid" :src="largeImage" alt="Imagen original">
+                <img class="img-fluid" :src="largeImage" alt="Imagen original" style="width: 100%; height: 100%;">
             </template>
         </Modal>
         <!-- Modal de detalles de la planta -->
@@ -88,7 +88,7 @@
                         <p class="text-start">{{ detailsDescription }}</p>
                     </div>
                     <div class="col-12 col-md-3">
-                        <img :src="detailsImage" class="image-fluid" />
+                        <img :src="detailsImage" class="image-fluid" style="width: 100%; height: 100%;" />
                     </div>
                 </div>
                 <div>
@@ -99,19 +99,31 @@
                 </div>
             </template>
         </Modal>
+        <!-- Modal de confirmacion de colaboracion -->
+        <ModalConfirm 
+            id="colaborationModal" 
+            :title="'Confirmación de Colaboración'" 
+            :message="'No existen datos de esta planta, ¿Desea agregar los datos?'"
+            :confirm="'Sí, quiero colaborar'"
+            :reject="'No, gracias'"
+        />
+        <button ref="colaborationButton" class="btn" data-bs-toggle="modal" data-bs-target="#colaborationModal" hidden></button>
     </div>
 </template>
 
 <script>
 import DetectionService from "../../services/DetectionService";
 import Modal from "../../components/commons/Modal.vue";
+import ModalConfirm from "../../components/commons/ModalConfirm.vue";
 import Spinner from "../../components/commons/Spinner.vue";
 import PlantService from "../../services/PlantService";
+import { usePlantStore } from "@/stores/PlantVuex";
 
 export default {
     components: {
         Modal,
-        Spinner
+        Spinner,
+        ModalConfirm
     },
     data() {
         return {
@@ -177,17 +189,22 @@ export default {
             // Abrir el modal
             this.$refs.imageModal.openModal();
         },
-        async seeDetails(plantName) {
+        async seeDetails(plantName,indice) {
             try {
                 this.restartDetails();
-                this.$refs.plantDetails.openModal();
                 const response = await PlantService.getPlant(plantName.toLowerCase());
-                this.detailsTitle = this.capitalize(response.data.nombre_cientifico);
-                this.detailsCommon = response.data.nombre_comun ? this.capitalize(response.data.nombre_comun) : "";
-                this.detailsFamily = this.capitalize(response.data.familia);
-                this.detailsGenus = this.capitalize(response.data.genero);
-                this.detailsImage = response.data.imagenes[0];
-                this.detailsDescription = response.data.descripcion;
+                if (response.code === 2001) {
+                    this.detailsTitle = this.capitalize(response.data.nombre_cientifico);
+                    this.detailsCommon = response.data.nombre_comun ? this.capitalize(response.data.nombre_comun) : "";
+                    this.detailsFamily = this.capitalize(response.data.familia);
+                    this.detailsGenus = this.capitalize(response.data.genero);
+                    this.detailsImage = response.data.imagenes[0];
+                    this.detailsDescription = response.data.descripcion;
+                    this.$refs.plantDetails.openModal();
+                } else {
+                    usePlantStore().setData(this.plantsIdentify[indice]);
+                    this.$refs.colaborationButton.click();
+                }
             } catch (error) {
                 console.error("Error al obtener los detalles de la planta");
             }

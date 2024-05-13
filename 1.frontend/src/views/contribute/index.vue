@@ -157,9 +157,6 @@ export default {
         }
     },
     methods: {
-        saveInformation() {
-
-        },
         handleMapClick() {
             this.ubication = [this.$refs.map.lat, this.$refs.map.lng]
         },
@@ -178,6 +175,7 @@ export default {
                     }
                     try {
                         await PlantService.newPlant(body);
+                        this.resetForm();
                     } catch (error) {
                         console.error("Error al crear una nueva planta");
                     }
