@@ -356,6 +356,10 @@ body {
     box-shadow: 1px 1px 3px white;
     transition: 0.5s;
   }
+
+  .modal-header {
+    background-color: #101f4a !important;
+  }
 }
 
 @include color-mode(light) {
@@ -431,5 +435,9 @@ body {
   .listHover:hover{
     box-shadow: 1px 1px 3px black;
     transition: 0.5s;
+  }
+
+  .modal-header {
+    background-color: #18b4f7 !important;
   }
 }

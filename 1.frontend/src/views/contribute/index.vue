@@ -13,7 +13,7 @@
                 <!-- Primera Fila -->
                 <div class="row">
                     <div class="col-md-6 col-12">
-                        <Input :label="'Nombre Científico'" id="cientificiName" type="text" v-model="cientificName"
+                        <Input :label="'Nombre Científico'" id="cientificiName" type="text" v-model="scientificName"
                             :required="true" icon="fa-solid fa-flask"
                             :additionalClass="cientificCheck ? 'bg-danger' : ''"></Input>
                     </div>
@@ -106,6 +106,8 @@
 import Input from "@/components/commons/Input.vue";
 import Leafletmap from "@/components/maps/Leafletmap.vue";
 import PlantService from "../../services/PlantService";
+import { usePlantStore } from "@/stores/PlantVuex";
+import { useRouter } from 'vue-router';
 
 export default {
     components: {
@@ -114,7 +116,7 @@ export default {
     },
     data() {
         return {
-            cientificName: "",
+            scientificName: "",
             commonName: "",
             family: "",
             genus: "",
@@ -125,13 +127,20 @@ export default {
             familyCheck: false,
             genusCheck: false,
             plantImageCheck: false,
-            ubicationCheck: false
+            ubicationCheck: false,
+            plantStore: usePlantStore(),
+            router: useRouter()
         };
     },
-    mounted() { },
+    mounted() {
+        //Si llegamos desde el modal confirm de identificacion obtenemos los datos guardados en PiniaStore
+        if (this.router.options.history.state.back == "/general/identificacion"){
+            this.handleIdentifyRedirection();
+        }
+    },
     computed: {},
     watch: {
-        cientificName: function (newVal, oldVal) {
+        scientificName: function (newVal, oldVal) {
             if (newVal.trim().length > 0) {
                 this.cientificCheck = false;
                 this.errors = this.errors.filter(error => error !== "El nombre cientifico no puede estar vacio");
@@ -165,7 +174,7 @@ export default {
                 try {
                     let imagen = await this.imageToBase64();
                     let body = {
-                        cientificName: this.cientificName,
+                        scientificName: this.scientificName,
                         commonName: this.commonName,
                         family: this.family,
                         genus: this.genus,
@@ -211,10 +220,10 @@ export default {
             this.$refs.plantImage.value = "";
             this.$refs.map.removeMarkers();
             //Obtenemos el elemento de raiz de la aplicacion para poder devolver al usuario a la parte de arriba
-            document.getElementById("appInner").scrollTo({ top: 0, left: 0, behavior: "smooth"});
+            document.getElementById("appInner").scrollTo({ top: 0, left: 0, behavior: "smooth" });
         },
         validateForm() {
-            if (!this.cientificName) {
+            if (!this.scientificName) {
                 this.errors.push("El nombre cientifico no puede estar vacio");
                 this.cientificCheck = true;
             }
@@ -246,6 +255,14 @@ export default {
                 this.plantImageCheck = false;
                 this.errors = this.errors.filter(error => error !== "La imagen de la planta no debe estar vacia");
             }
+        },
+        handleIdentifyRedirection(){
+            document.getElementById("appInner").scrollTo({ top: 0, left: 0, behavior: "smooth" });
+            this.scientificName=this.plantStore.scientificName;
+            this.commonName=this.plantStore.commonName;
+            this.family=this.plantStore.family;
+            this.genus=this.plantStore.genus;
+            this.plantStore.resetState();
         }
     }
 };

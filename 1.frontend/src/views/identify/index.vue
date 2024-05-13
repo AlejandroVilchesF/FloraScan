@@ -67,7 +67,7 @@
         </div>
         <!-- Cardfooter de muestra de imagenes con enlaces a la informacion/colaboracion -->
         <div class="card-footer">
-            <a class="router-link" @click="seeDetails(item.species.scientificNameWithoutAuthor,index)">
+            <a class="router-link" @click="seeDetails(item.species.scientificNameWithoutAuthor, index)">
                 <i class="bi bi-search me-2" data-theme-icon="bi-search"></i>
                 <span class="align-middle">{{ 'Ver detalles' }}</span>
             </a>
@@ -100,14 +100,11 @@
             </template>
         </Modal>
         <!-- Modal de confirmacion de colaboracion -->
-        <ModalConfirm 
-            id="colaborationModal" 
-            :title="'Confirmación de Colaboración'" 
-            :message="'No existen datos de esta planta, ¿Desea agregar los datos?'"
-            :confirm="'Sí, quiero colaborar'"
-            :reject="'No, gracias'"
-        />
-        <button ref="colaborationButton" class="btn" data-bs-toggle="modal" data-bs-target="#colaborationModal" hidden></button>
+        <ModalConfirm id="colaborationModal" :title="'Confirmación de Colaboración'"
+            :message="'No existen datos de esta planta, ¿Deseas contribuir?'" :confirm="'Sí, quiero contribuir'"
+            :reject="'No, gracias'" />
+        <button ref="colaborationButton" class="btn" data-bs-toggle="modal" data-bs-target="#colaborationModal"
+            hidden></button>
     </div>
 </template>
 
@@ -118,6 +115,7 @@ import ModalConfirm from "../../components/commons/ModalConfirm.vue";
 import Spinner from "../../components/commons/Spinner.vue";
 import PlantService from "../../services/PlantService";
 import { usePlantStore } from "@/stores/PlantVuex";
+import { useRouter } from 'vue-router';
 
 export default {
     components: {
@@ -139,6 +137,8 @@ export default {
             detailsImage: "",
             detailsFamily: "",
             detailsGenus: "",
+            plantStore: usePlantStore(),
+            router: useRouter()
         };
     },
     mounted() { },
@@ -189,7 +189,7 @@ export default {
             // Abrir el modal
             this.$refs.imageModal.openModal();
         },
-        async seeDetails(plantName,indice) {
+        async seeDetails(plantName, indice) {
             try {
                 this.restartDetails();
                 const response = await PlantService.getPlant(plantName.toLowerCase());
@@ -201,9 +201,14 @@ export default {
                     this.detailsImage = response.data.imagenes[0];
                     this.detailsDescription = response.data.descripcion;
                     this.$refs.plantDetails.openModal();
+                } else if (response.code === 3000) {
+                    Object.assign(this.$data, this.$options.data.call(this));
+                    this.waitingPrediction = false;
                 } else {
-                    usePlantStore().setData(this.plantsIdentify[indice]);
+                    this.plantStore.setData(this.plantsIdentify[indice]);
                     this.$refs.colaborationButton.click();
+                    document.getElementById("colaborationModalconfirmModalBtn").addEventListener("click", this.handleConfirmButton, false);
+                    document.getElementById("colaborationModalrejectModalBtn").addEventListener("click", this.handleRejectButton, false);
                 }
             } catch (error) {
                 console.error("Error al obtener los detalles de la planta");
@@ -219,6 +224,12 @@ export default {
         },
         capitalize(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        handleConfirmButton() {
+            this.router.push({ name: "contribuir" });
+        },
+        handleRejectButton() {
+            this.plantStore.resetState();
         }
     }
 };

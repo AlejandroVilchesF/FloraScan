@@ -42,6 +42,7 @@
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
+            :id="localRejectBtn"
           >
             {{ reject }}
           </button>
@@ -120,6 +121,9 @@ export default {
     localConfirmBtn: function () {
       return this.id + "confirmModalBtn";
     },
+    localRejectBtn: function (){
+      return this.id + "rejectModalBtn";
+    }
   },
   methods: {
     // Abre el modal utilizando la instancia de modal

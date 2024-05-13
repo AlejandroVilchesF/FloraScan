@@ -41,10 +41,12 @@ exports.identify = async (req, res) => {
             return res.status(200).send({ data:data.results, code: 2001 });
         } else {
             console.log(`${status}: No se ha conseguido completar la peticion`);
+            return res.status(200).send({ data:data.results, code: 2001 });
         }
 
     } catch (error) {
         console.error('error', error);
+        return res.status(200).send({message: 'Especie no encontrada', data:[], code: 3000 });
     }
 };
 

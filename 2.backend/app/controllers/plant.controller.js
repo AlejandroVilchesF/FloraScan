@@ -43,7 +43,7 @@ exports.getPlant = async (req , res) => {
         if (findPlant) {
           return res.status(200).send({data: findPlant, code: 2001});
         } else {
-          return res.status(200).send({message: 'Planta no encontrada', code: 3000});
+          return res.status(200).send({message: 'Planta no encontrada', code: 3001});
         }
       } catch (err) {
         console.error("Plant Contoller: getPlant")
