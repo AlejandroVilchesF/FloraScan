@@ -38,6 +38,16 @@
           </a>
         </li>
       </router-link>
+
+      <router-link :to="{ name: 'busqueda' }" class="routerLink"
+        v-if="isLogged && allowedRoute('USER_SEE', 'admin')">
+        <li class="sidebar-item" :class="{ active: isCurrentRoute('busqueda') }">
+          <a class="sidebar-link">
+            <i class="bi bi-search me-2 opacity-50" data-theme-icon="bi-search"></i>
+            <span class="align-middle">{{ 'Busqueda' }}</span>
+          </a>
+        </li>
+      </router-link>
       <!-- Enlances de Administracion -->
       <li class="sidebar-header text-uppercase mt-3" v-if="allowedRoute('USER_SEE', 'admin')">
         Administración

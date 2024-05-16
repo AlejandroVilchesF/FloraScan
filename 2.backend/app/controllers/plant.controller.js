@@ -51,3 +51,37 @@ exports.getPlant = async (req , res) => {
         return res.status(500).send({ message: 'Error', code: 3000 });
       }
 };
+
+exports.findByField = async (req , res) => {
+    try {
+        let field=req.params.field;
+        let keyword=req.params.keyword;
+        let results;
+        if (field === "nombre_cientifico") {
+            // Buscamos el documento que contenga la cadena buscada en el campo "nombre_cientifico"
+            results = await Plant.findOne({ nombre_cientifico: { $regex: keyword, $options: 'i' } });
+        } else {
+            // Buscamos todos los documentos que contengan la cadena buscada en el campo especificado
+            let query = {};
+            //Creamos un objeto con la query de forma dinamica
+            query[field] = { $regex: keyword, $options: 'i' };
+            results = await Plant.find(query);
+        }
+
+        //Controlamos el caso que el resultado devuelto haya sido una array (Se ha buscado por familia o genero)
+        if (Array.isArray(results) && results.length > 0){
+            return res.status(200).send({data: results, code: 2001});
+        }
+        //En caso que no sea una array, significa que se ha buscado por especie
+        if (!Array.isArray(results) && results){
+            //Se transforma en una array el resultado unico para ser tratado de la misma forma en el front
+            return res.status(200).send({data: [results], code: 2001}); 
+        }
+        //Si se llega a este return significa que no se ha encontrado nada
+        return res.status(200).send({message: 'Planta no encontrada', code: 3001});
+      } catch (err) {
+        console.error("Plant Contoller: findByField")
+        console.error(err);
+        return res.status(500).send({ message: 'Error', code: 3000 });
+      }
+};

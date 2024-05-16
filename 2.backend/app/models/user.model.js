@@ -30,6 +30,8 @@ module.exports = mongoose => {
         password: String,
         lastAccess: Date,
         status: Boolean,
+        avatar: Object,
+        bio: String
       },
       role: { type: mongoose.Schema.ObjectId, ref: "roles" },
       albumes: [{ type: mongoose.Schema.ObjectId, ref: "albumes" }],

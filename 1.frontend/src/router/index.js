@@ -116,6 +116,17 @@ const routes = [
           action: 'USER_SELF',
           guest: false
         }
+      },
+      {
+        path: 'busqueda',
+        name: 'busqueda',
+        component: () => import('@/views/search'),
+        meta: {
+          title: 'Busqueda',
+          breadCrumb: 'Busqueda',
+          action: 'USER_SELF',
+          guest: false
+        }
       }
     ]
   },   

@@ -220,7 +220,6 @@ exports.update = async (req, res) => {
         lastAccess: targetUser.info.lastAccess
       }
     };
-
     try{
       // Execute update and return updated user
       const updatedUser = await User.findOneAndUpdate( { _id: targetId }, updateSchema, { new: true }).populate('role');

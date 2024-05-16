@@ -281,7 +281,7 @@
                 let updateData = {
                     data: {
                         info: {
-                            name: this.localName,
+                            nombre_usuario: this.localName,
                             email: this.localEmail,
                             avatar: this.localAvatar,
                             bio: this.localBio

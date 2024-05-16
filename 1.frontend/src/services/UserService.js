@@ -40,6 +40,7 @@ class UserService {
     
   /* Actualizar los datos del usuario por el ID */
   updateUser(id, data){
+    console.log(data);
     return http.put(`user/data/${id}`, data)
   }  
 

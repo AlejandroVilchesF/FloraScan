@@ -10,6 +10,10 @@ class PlantService {
         return http.get(`/plant/getplant/${cientificName}`);
     }
 
+    findPlantByField(keyword,field){
+        return http.get(`/plant/findfield/${keyword}/${field}`);
+    }
+
 }
 
 export default new PlantService();
