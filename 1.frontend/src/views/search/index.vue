@@ -14,7 +14,8 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="species-tab" data-bs-toggle="tab" href="#species" role="tab"
-                    @click="updateSearchField('nombre_cientifico')" aria-controls="species" aria-selected="false">Especies
+                    @click="updateSearchField('nombre_cientifico')" aria-controls="species"
+                    aria-selected="false">Especies
                 </a>
             </li>
         </ul>
@@ -31,12 +32,35 @@
         <div class="row">
             <div class="m-2 col-md-6 col-12">
                 <div class="input-group">
-                    <input type="text" v-model="keyWord" class="form-control" placeholder="Búsqueda"
+                    <input ref="searchInput" type="text" v-model="keyWord" class="form-control" placeholder="Búsqueda"
                         aria-label="Búsqueda" aria-describedby="searchButton" @input="clearError">
                     <button class="btn btn-outline-secondary" type="button" id="searchButton" @click="searchPlants"><i
                             class="bi bi-search"></i></button>
                 </div>
             </div>
+            <div class="m-2 col-md-5 col-12 text-end">
+                <button class="btn btn-outline-success" type="button" id="searchButton" @click="showOptions"
+                    data-bs-toggle="modal" data-bs-target="#optionsModal">
+                    <i class="bi bi-binoculars"> Sugerencias</i>
+                </button>
+            </div>
+            <!-- Modal de sugerencias -->
+            <Modal ref="optionsModal" id="optionsModal" :title="userModalTitle" :footer="false" :frameless="true" :clase="'modal-sm'">
+                <template v-slot:modalBody>
+                    <table class="table table-striped">
+                        <thead>
+                            <th v-if="searchField == 'familia'">Familias</th>
+                            <th v-if="searchField == 'genero'">Generos</th>
+                            <th v-if="searchField == 'nombre_cientifico'">Especies</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in autocompleteOptions">
+                                <td @click="fillSearch(item)">{{ capitalize(item) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+            </Modal>
         </div>
         <div class="mx-2" v-if="infoList.length > 0">
             <hr />
@@ -44,12 +68,7 @@
         <!-- Contenido -->
         <div class="row p-2 mt-3" v-if="infoList.length > 0">
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="family">
-                </div>
-                <div class="tab-pane fade" id="genus">
-                </div>
-                <div class="tab-pane fade" id="species">
-                </div>
+                <!--Informacion Consulta-->
             </div>
         </div>
         <div v-if="errorMessage != ''" class="bg-danger m-2 p-2 rounded">
@@ -63,33 +82,44 @@
 <script>
 import Input from "@/components/commons/Input.vue";
 import PlantService from "../../services/PlantService";
+import Modal from "@/components/commons/Modal.vue";
+
 
 export default {
     components: {
-        Input
+        Input,
+        Modal
     },
     data() {
         return {
             infoList: [],
             keyWord: "",
             searchField: "familia",
-            errorMessage: ""
+            errorMessage: "",
+            autocompleteOptions: [],
         };
     },
-    mounted() { },
+    mounted() {
+        this.retriveAutocompleteOptions();
+    },
     computed: {
     },
-    watch: {},
+    watch: {
+        searchField: function (newVal, oldVal) {
+            this.retriveAutocompleteOptions();
+        }
+    },
     methods: {
         updateSearchField(field) {
             this.searchField = field;
-            this.keyWord="";
+            this.keyWord = "";
         },
         async searchPlants() {
             if (this.keyWord.trim() != "") {
                 try {
-                    const response = await PlantService.findPlantByField(this.keyWord,this.searchField);
+                    const response = await PlantService.findPlantByField(this.keyWord, this.searchField);
                     this.infoList = response.data;
+                    console.log(this.infoList);
                 } catch (error) {
                     console.error(error);
                 }
@@ -98,8 +128,27 @@ export default {
                 this.errorMessage = "Debe introducir alguna palabra clave para realizar la busqueda";
             }
         },
-        clearError(){
+        clearError() {
             this.errorMessage = "";
+        },
+        async retriveAutocompleteOptions() {
+            this.autocompleteOptions=[];
+            try {
+                let options = await PlantService.getNames(this.searchField);
+                options.data.forEach(el => {
+                    this.autocompleteOptions.push(el[this.searchField]);
+                })
+                console.log(this.autocompleteOptions);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        capitalize(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        fillSearch(valor){
+            this.keyWord=valor;
+            this.$refs.optionsModal.closeModal();
         }
     }
 };

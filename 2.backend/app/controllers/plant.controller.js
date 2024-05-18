@@ -85,3 +85,20 @@ exports.findByField = async (req , res) => {
         return res.status(500).send({ message: 'Error', code: 3000 });
       }
 };
+
+exports.getNames = async (req, res) => {
+    try {
+      // Encuentra todas las plantas y selecciona solo el campo 'nombreCientifico'
+      let plants = await Plant.find().select(req.params.field);
+      
+      if (plants.length > 0) {
+        return res.status(200).send({data: plants, code: 2001});
+      } else {
+        return res.status(200).send({message: 'No se encontraron plantas', code: 3001});
+      }
+    } catch (err) {
+      console.error("Plant Controller: getAllPlants");
+      console.error(err);
+      return res.status(500).send({message: 'Error', code: 3000});
+    }
+};

@@ -68,10 +68,6 @@ export default {
       return useUsersStore().v_userdata? true:false;
     }
   },
-  methods: {
-    getText(enText, jpText){
-      return this.language == 'EN'? enText : this.language == 'JP'? jpText:''
-    }
-  }
+  methods: {}
 };
 </script>

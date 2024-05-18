@@ -20,7 +20,7 @@
       </router-link>
 
       <router-link :to="{ name: 'identificacion' }" class="routerLink"
-        v-if="isLogged && allowedRoute('USER_SEE', 'admin')">
+        v-if="isLogged && allowedRoute('IDENTIFY_SEE', 'admin')">
         <li class="sidebar-item" :class="{ active: isCurrentRoute('identificacion') }">
           <a class="sidebar-link">
             <i class="bi bi-flower1 me-2 opacity-50" data-theme-icon="bi-flower1"></i>
@@ -30,7 +30,7 @@
       </router-link>
 
       <router-link :to="{ name: 'contribuir' }" class="routerLink"
-        v-if="isLogged && allowedRoute('USER_SEE', 'admin')">
+        v-if="isLogged && allowedRoute('CONTRIBUTION_SEE', 'admin')">
         <li class="sidebar-item" :class="{ active: isCurrentRoute('contribuir') }">
           <a class="sidebar-link">
             <i class="bi bi-patch-plus me-2 opacity-50" data-theme-icon="bi-patch-plus"></i>
@@ -40,7 +40,7 @@
       </router-link>
 
       <router-link :to="{ name: 'busqueda' }" class="routerLink"
-        v-if="isLogged && allowedRoute('USER_SEE', 'admin')">
+        v-if="isLogged && allowedRoute('SEARCH_SEE', 'admin')">
         <li class="sidebar-item" :class="{ active: isCurrentRoute('busqueda') }">
           <a class="sidebar-link">
             <i class="bi bi-search me-2 opacity-50" data-theme-icon="bi-search"></i>
@@ -70,18 +70,6 @@
           </a>
         </li>
       </router-link>
-
-      <!-- <router-link :to="{ name: 'settings' }" class="routerLink">
-        <li
-          class="sidebar-item"
-          :class="{ active: isCurrentRoute('settings') }"
-        >
-          <a class="sidebar-link" v-if="allowedRoute('ADMIN', 'admin')">
-            <i class="bi bi-gear me-2 opacity-50" data-theme-icon="bi-gear"></i>
-            <span class="align-middle">Configuración</span>
-          </a>
-        </li>
-      </router-link> -->
     </ul>
   </div>
 </template>

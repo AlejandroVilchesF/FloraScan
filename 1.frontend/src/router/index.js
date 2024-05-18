@@ -102,7 +102,7 @@ const routes = [
         meta: {
           title: 'Identificacion',
           breadCrumb: 'Identificacion',
-          action: 'USER_SELF',
+          action: 'IDENTIFY_SEE',
           guest: false
         }
       },
@@ -113,7 +113,7 @@ const routes = [
         meta: {
           title: 'Contribuir',
           breadCrumb: 'Contribuir',
-          action: 'USER_SELF',
+          action: 'CONTRIBUTION_SEE',
           guest: false
         }
       },
@@ -124,7 +124,7 @@ const routes = [
         meta: {
           title: 'Busqueda',
           breadCrumb: 'Busqueda',
-          action: 'USER_SELF',
+          action: 'SEARCH_SEE',
           guest: false
         }
       }

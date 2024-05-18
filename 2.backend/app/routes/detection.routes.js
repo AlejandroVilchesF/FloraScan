@@ -6,7 +6,7 @@ let router = require("express").Router();
 
 module.exports = app => {
 
-router.post("/identify", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "USER_SELF") }], detectionController.identify);
+router.post("/identify", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "IDENTIFY_SEE") }], detectionController.identify);
 
   /***************/
   app.use(

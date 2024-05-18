@@ -29,7 +29,6 @@ verifyToken = async (req, res, next) => {
 authRoute = async (req, res, next, allowedActions, self) => {
   // Petitioner user
   const tokenedUser = res.locals.tokenedUser;
-
   // Super admin role directly grants access to the endpoint
   if (tokenedUser.role && tokenedUser.role._id == DEFAULT_ROLES[0]._id.toString()) {
     return next();

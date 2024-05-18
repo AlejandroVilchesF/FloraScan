@@ -14,6 +14,10 @@ class PlantService {
         return http.get(`/plant/findfield/${keyword}/${field}`);
     }
 
+    getNames(searchField){
+        return http.get(`/plant/getNames/${searchField}`);
+    }
+
 }
 
 export default new PlantService();

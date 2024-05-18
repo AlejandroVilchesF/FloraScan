@@ -3,8 +3,8 @@ const SECTIONS = [
         name: "Identificacion",
         binary: true,
         actions: {
-            see: { keyword: "PRIVATE_SEE" },
-            admin: { keyword: "PRIVATE_ADMIN" }
+            see: { keyword: "IDENTIFY_SEE" },
+            admin: { keyword: "IDENTIFY_ADMIN" }
         }
     },
     {
@@ -29,8 +29,16 @@ const SECTIONS = [
         name: "Contribucion",
         binary: true,
         actions: {
-            see: { keyword: "PRIVATE_SEE" },
-            admin: { keyword: "PRIVATE_ADMIN" }
+            see: { keyword: "CONTRIBUTION_SEE" },
+            admin: { keyword: "CONTRIBUTION_ADMIN" }
+        }
+    },
+    {
+        name: "Busqueda",
+        binary: true,
+        actions: {
+            see: { keyword: "SEARCH_SEE" },
+            admin: { keyword: "SEARCH_ADMIN" }
         }
     }
 ];
