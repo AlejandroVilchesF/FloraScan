@@ -14,9 +14,9 @@ export default {
         return {
             map: null,
             layerController: null,
-            lat:0,
-            lng:0,
-            mapMarkers:[]
+            lat: 0,
+            lng: 0,
+            mapMarkers: []
         };
     },
     mounted() {
@@ -70,20 +70,23 @@ export default {
                     fullscreenElement: false,
                 })
                 .addTo(this.map);
+
             //Evento para obtener las coordenadas al hacer click
-            this.map.on('click', (e) => {
-                const { lat, lng } = e.latlng;
-                this.lat=lat;
-                this.lng=lng;
-                // Emitir evento para enviar las coordenadas al componente padre
-                this.$emit("mapClick");
-                //Creacion de marcador para mostrar el lugar del click
-                this.newMarker(lat,lng);
-            });
+            if (this.$route.name == "contribuir") {
+                this.map.on('click', (e) => {
+                    const { lat, lng } = e.latlng;
+                    this.lat = lat;
+                    this.lng = lng;
+                    // Emitir evento para enviar las coordenadas al componente padre
+                    this.$emit("mapClick");
+                    //Creacion de marcador para mostrar el lugar del click
+                    this.newMarker(lat, lng);
+                });
+            }
         },
-        newMarker(lat,lng){
+        newMarker(lat, lng) {
             this.removeMarkers();
-            let myIcon=L.icon({
+            let myIcon = L.icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
                 iconSize: [25, 41],
@@ -91,22 +94,50 @@ export default {
                 popupAnchor: [1, -34],
                 shadowSize: [41, 41]
             });
-           let marker =  L.marker([lat, lng],{icon:myIcon}).addTo(this.map);
-           this.mapMarkers.push(marker);
+            let marker = L.marker([lat, lng], { icon: myIcon }).addTo(this.map);
+            this.mapMarkers.push(marker);
         },
-        removeMarkers(){
-            this.mapMarkers.forEach(el => { this.map.removeLayer(el)});
+        removeMarkers() {
+            this.mapMarkers.forEach(el => { this.map.removeLayer(el) });
+        },
+        contributionMarkers(coordinates) {
+            let myIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+            coordinates.forEach(el => {
+                L.marker([el.latitud, el.longitud], { icon: myIcon }).addTo(this.map);
+            });
+        },
+        formatDate(isoDate){
+            const date = new Date(isoDate);
+
+            const day = date.getUTCDate();
+            const month = date.getUTCMonth() + 1;
+            const year = date.getUTCFullYear();
+
+            const formattedDay = String(day).padStart(2, '0');
+            const formattedMonth = String(month).padStart(2, '0');
+
+            const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
+
+            return formattedDate;
         }
     }
 };
 </script>
 
 <style scoped>
-#map{
+#map {
     height: 100%;
     width: 100%;
 }
-#map:hover{
+
+#map:hover {
     cursor: pointer;
 }
 </style>

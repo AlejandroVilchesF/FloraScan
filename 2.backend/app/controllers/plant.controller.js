@@ -4,13 +4,14 @@ const PostLog = require('./system.log.controller').postLog;
 // Método de inserccion de planta
 exports.newPlant = async (req, res) => {
     try {
+      console.log(req.body)
         //Control en el backend de los campos obligatorios
-        if (!req.body.cientificName || !req.body.family || !req.body.genus || !req.body.image || !req.body.ubication) {
+        if (!req.body.scientificName || !req.body.family || !req.body.genus || !req.body.image || !req.body.ubication) {
             return res.status(400).send({ message: 'Peticion incompleta', code: 3000 });
         }
         //Creacion del objeto planta a guardar
         const newPlant = new Plant({
-            nombre_cientifico: req.body.cientificName,
+            nombre_cientifico: req.body.scientificName,
             nombre_comun: req.body.commonName ? req.body.commonName : "",
             ubicacion: { latitud: req.body.ubication[0], longitud: req.body.ubication[1] },
             familia: req.body.family,
@@ -39,7 +40,7 @@ exports.newPlant = async (req, res) => {
 
 exports.getPlant = async (req , res) => {
     try {
-        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.cientificName });
+        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.scientificName });
         if (findPlant) {
           return res.status(200).send({data: findPlant, code: 2001});
         } else {
@@ -88,8 +89,8 @@ exports.findByField = async (req , res) => {
 
 exports.getNames = async (req, res) => {
     try {
-      // Encuentra todas las plantas y selecciona solo el campo 'nombreCientifico'
-      let plants = await Plant.find().select(req.params.field);
+      // Encuentra todas las plantas por el campo especificado y las ordena alfabeticamente
+      let plants = await Plant.find().select(req.params.field).sort({[req.params.field]:1});
       
       if (plants.length > 0) {
         return res.status(200).send({data: plants, code: 2001});
@@ -97,7 +98,7 @@ exports.getNames = async (req, res) => {
         return res.status(200).send({message: 'No se encontraron plantas', code: 3001});
       }
     } catch (err) {
-      console.error("Plant Controller: getAllPlants");
+      console.error("Plant Controller: getNames");
       console.error(err);
       return res.status(500).send({message: 'Error', code: 3000});
     }

@@ -17,7 +17,8 @@ module.exports = (mongoose) => {
       ubicacion: [
         {
           latitud: { type: Number },
-          longitud: { type: Number }
+          longitud: { type: Number },
+          fecha: { type: Date, default: Date.now }
         }
       ],
       familia: String,

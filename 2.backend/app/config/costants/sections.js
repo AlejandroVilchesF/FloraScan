@@ -40,6 +40,14 @@ const SECTIONS = [
             see: { keyword: "SEARCH_SEE" },
             admin: { keyword: "SEARCH_ADMIN" }
         }
+    },
+    {
+        name: "Detalles",
+        binary: true,
+        actions: {
+            see: { keyword: "DETAILS_SEE" },
+            admin: { keyword: "DETAILS_ADMIN" }
+        }
     }
 ];
 

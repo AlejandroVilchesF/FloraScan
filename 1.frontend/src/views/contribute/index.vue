@@ -167,7 +167,7 @@ export default {
     },
     methods: {
         handleMapClick() {
-            this.ubication = [this.$refs.map.lat, this.$refs.map.lng]
+            this.ubication = [this.$refs.map.lat, this.$refs.map.lng];
         },
         async handleForm() {
             if (this.validateForm()) {

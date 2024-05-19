@@ -127,6 +127,17 @@ const routes = [
           action: 'SEARCH_SEE',
           guest: false
         }
+      },
+      {
+        path: 'detalles',
+        name: 'detalles',
+        component: () => import('@/views/details'),
+        meta: {
+          title: 'Detalles',
+          breadCrumb: 'Detalles',
+          action: 'DETAILS_SEE',
+          guest: false
+        }
       }
     ]
   },   

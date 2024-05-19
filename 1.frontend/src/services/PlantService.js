@@ -6,8 +6,8 @@ class PlantService {
         return http.post("/plant/newplant",data);
     }
 
-    getPlant(cientificName){
-        return http.get(`/plant/getplant/${cientificName}`);
+    getPlant(scientificName){
+        return http.get(`/plant/getplant/${scientificName}`);
     }
 
     findPlantByField(keyword,field){

@@ -20,6 +20,9 @@ export const usePlantStore = defineStore('plants', {
       this.family = "";
       this.genus = "";
       this.commonName = "";
+    },
+    setDetailSearch(scientificName){
+      this.scientificName=scientificName;
     }
   },
 });
