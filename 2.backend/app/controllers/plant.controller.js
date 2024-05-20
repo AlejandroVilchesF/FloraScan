@@ -40,7 +40,7 @@ exports.newPlant = async (req, res) => {
 
 exports.getPlant = async (req , res) => {
     try {
-        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.scientificName });
+        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.scientificName }).populate("enfermedades");
         if (findPlant) {
           return res.status(200).send({data: findPlant, code: 2001});
         } else {

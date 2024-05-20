@@ -18,6 +18,9 @@
         <div class="card-footer" v-if="plantInfo != null">
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item">
+                    Nombre Comun: <span class="text-muted">{{ capitalize(plantInfo.nombre_comun) }}</span>
+                </li>
+                <li class="list-group-item">
                     Familia: <span class="text-muted">{{ capitalize(plantInfo.familia) }}</span>
                 </li>
                 <li class="list-group-item">
@@ -36,6 +39,73 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6 col-12" v-if="plantInfo != null">
+            <div class="card my-2">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Enfermedades</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item diseaseList" v-for="objeto in plantInfo.enfermedades"
+                            @click="diseaseModal(objeto)">
+                            {{ objeto.nombre_cientifico }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-12" v-if="plantInfo != null">
+            <div class="card my-2">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Altitudes</h5>
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+        <!-- Modal de detalles de enfermedad -->
+        <Modal ref="diseaseDetails" id="diseaseDetails" :title="diseaseTitle" :footer="true" :frameless="true">
+            <template v-slot:modalBody>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h6>Descripcion</h6>
+                        <p>{{ diseaseDescription }}</p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <h6>Tratamiento</h6>
+                        <p>{{ diseaseTreament }}</p>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:modalFooter>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Nombre Comun: <span class="text-muted">{{ diseaseCommonName }}</span>
+                    </li>
+                </ul>
+            </template>
+        </Modal>
+    </div>
+    <!-- Galeria de Imagenes -->
+    <div class="card my-2" v-if="plantInfo != null" >
+        <div class="card-header">
+            <h5 class="card-title mb-0">Galeria de Imagenes</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item listHover" v-for="(item, index) in plantInfo.imagenes">
+                    <img class="img-fluid" :src="item" @click="showModal(index)">
+                </li>
+            </ul>
+        </div>
+        <!-- Modal para mostrar la imagen en grande -->
+        <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="false" :frameless="true">
+            <template v-slot:modalBody>
+                <img class="img-fluid" :src="largeImage" alt="Imagen original" style="width: 100%; height: 100%;">
+            </template>
+        </Modal>
+    </div>
 </template>
 
 
@@ -45,11 +115,13 @@ import PlantService from "../../services/PlantService";
 import { usePlantStore } from "@/stores/PlantVuex";
 import { useRouter } from 'vue-router';
 import Leafletmap from "@/components/maps/Leafletmap.vue";
+import Modal from "@/components/commons/Modal.vue";
 
 
 export default {
     components: {
-        Leafletmap
+        Leafletmap,
+        Modal
     },
     data() {
         return {
@@ -57,6 +129,11 @@ export default {
             router: useRouter(),
             plantInfo: null,
             lineList: [],
+            diseaseTitle:"",
+            diseaseDescription:"",
+            diseaseTreament:"",
+            diseaseCommonName:"",
+            largeImage: ""
         };
     },
     async mounted() {
@@ -64,7 +141,7 @@ export default {
     },
     computed: {},
     watch: {
-        plantInfo: function (){
+        plantInfo: function () {
             this.createMarkers();
         }
     },
@@ -78,11 +155,24 @@ export default {
                 console.error(error);
             }
         },
-        createMarkers(){
+        createMarkers() {
             this.$refs.mapDetails.contributionMarkers(this.plantInfo.ubicacion);
         },
         capitalize(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        diseaseModal(objeto) {
+            this.$refs.diseaseDetails.openModal();
+            this.diseaseTitle=objeto.nombre_cientifico;
+            this.diseaseDescription=objeto.descripcion;
+            this.diseaseTreament=objeto.tratamiento;
+            this.diseaseCommonName=objeto.nombre_comun;
+        },
+        showModal(index) {
+            // Obtener la URL de la imagen en grande
+            this.largeImage = this.plantInfo.imagenes[index];
+            // Abrir el modal
+            this.$refs.imageModal.openModal();
         }
     }
 };
@@ -91,5 +181,12 @@ export default {
 <style scoped>
 .fluid-wrapper {
     height: calc(100vh - 200px);
+}
+.diseaseList:hover{
+    cursor: pointer;
+}
+img{
+    height: 150px;
+    width: 150px;
 }
 </style>

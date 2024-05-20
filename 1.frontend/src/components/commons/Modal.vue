@@ -158,4 +158,9 @@ export default {
 .row {
   margin-right: 0px !important;
 }
+.modal-footer{
+    display: flex;
+    align-items: start !important;
+    justify-content: flex-start !important;
+}
 </style>
