@@ -18,6 +18,22 @@ class PlantService {
         return http.get(`/plant/getNames/${searchField}`);
     }
 
+    insertLabels(scientificName,labels){
+        let body = {
+            scientificName:scientificName,
+            idLabels:labels
+        }
+        return http.post("/plant/insertLabels",body);
+    }
+
+    insertDisease(nombre_planta,id_enfermedad){
+        let body = {
+            nombre_cientifico:nombre_planta,
+            id_enfermedad:id_enfermedad
+        }
+        return http.post("/plant/addDisease",body);
+    }
+
 }
 
 export default new PlantService();

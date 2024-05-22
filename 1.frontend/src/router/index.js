@@ -151,17 +151,6 @@ const routes = [
     component: Layout,
     children: [
       {
-        path: 'settings',
-        name: 'settings',
-        component: () => import('@/views/settings'),
-        meta: {
-          title: 'Settings',
-          breadCrumb: 'Settings',
-          action: 'ADMIN',
-          guest: false
-        }
-      },
-      {
         path: 'users',
         name: 'users',
         component: () => import('@/views/users'),

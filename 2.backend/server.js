@@ -63,3 +63,5 @@ require("./app/routes/auth.routes")(app);
 require("./app/routes/system.log.routes")(app);
 require("./app/routes/detection.routes")(app);
 require("./app/routes/plant.routes")(app);
+require("./app/routes/labels.routes")(app);
+require("./app/routes/disease.routes")(app);

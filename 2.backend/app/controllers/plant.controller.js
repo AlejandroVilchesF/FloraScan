@@ -4,7 +4,6 @@ const PostLog = require('./system.log.controller').postLog;
 // Método de inserccion de planta
 exports.newPlant = async (req, res) => {
     try {
-      console.log(req.body)
         //Control en el backend de los campos obligatorios
         if (!req.body.scientificName || !req.body.family || !req.body.genus || !req.body.image || !req.body.ubication) {
             return res.status(400).send({ message: 'Peticion incompleta', code: 3000 });
@@ -40,7 +39,7 @@ exports.newPlant = async (req, res) => {
 
 exports.getPlant = async (req , res) => {
     try {
-        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.scientificName }).populate("enfermedades");
+        let findPlant = await Plant.findOne({ nombre_cientifico: req.params.scientificName }).populate("enfermedades").populate("etiquetas");
         if (findPlant) {
           return res.status(200).send({data: findPlant, code: 2001});
         } else {
@@ -102,4 +101,42 @@ exports.getNames = async (req, res) => {
       console.error(err);
       return res.status(500).send({message: 'Error', code: 3000});
     }
+};
+
+exports.insertLabels = async (req, res) => {
+  try {
+
+    let plant = await Plant.findOne({ nombre_cientifico: req.body.scientificName });
+    
+    if (plant) {
+      plant.etiquetas = req.body.idLabels;
+      await plant.save();
+      return res.status(200).send({message: 'Etiquetas actualizadas correctamente', code: 2000});
+    } else {
+      return res.status(200).send({message: 'No se encontraron plantas con ese nombre', code: 3000});
+    }
+  } catch (err) {
+    console.error("Plant Controller: insertLabels");
+    console.error(err);
+    return res.status(500).send({message: 'Error', code: 3000});
+  }
+};
+
+exports.addDisease = async (req,res) => {
+  try {
+
+    let plant = await Plant.findOne({ nombre_cientifico: req.body.nombre_cientifico});
+    
+    if (plant) {
+      plant.enfermedades.push(req.body.id_enfermedad);
+      await plant.save();
+      return res.status(200).send({message: 'Enfermedad actualizadas correctamente', code: 2000});
+    } else {
+      return res.status(200).send({message: 'No se encontraron plantas con ese nombre', code: 3000});
+    }
+  } catch (err) {
+    console.error("Plant Controller: addDisease");
+    console.error(err);
+    return res.status(500).send({message: 'Error', code: 3000});
+  }
 };

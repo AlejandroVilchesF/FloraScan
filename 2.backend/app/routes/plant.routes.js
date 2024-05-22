@@ -14,7 +14,11 @@ module.exports = app => {
   router.get("/findfield/:keyword/:field", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "CONTRIBUTION_SEE", true) }], plantController.findByField);
   //Obtener todos los nombres de las plantas
   router.get("/getNames/:field", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "CONTRIBUTION_SEE", true) }], plantController.getNames);
-  
+  //Insertar Etiquetas
+  router.post("/insertLabels", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_SEE") }], plantController.insertLabels);
+  //Insertar Enfermedades
+  router.post("/addDisease", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_SEE") }], plantController.addDisease);
+
   /***************/
   app.use(
     basePath + "/plant",
