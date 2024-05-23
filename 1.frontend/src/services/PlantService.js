@@ -33,6 +33,9 @@ class PlantService {
         }
         return http.post("/plant/addDisease",body);
     }
+    findPlantsByLabel(id){
+        return http.get(`/plant/findByLabel/${id}`);
+    }
 
 }
 

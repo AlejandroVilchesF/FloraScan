@@ -18,6 +18,8 @@ module.exports = app => {
   router.post("/insertLabels", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_SEE") }], plantController.insertLabels);
   //Insertar Enfermedades
   router.post("/addDisease", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_SEE") }], plantController.addDisease);
+  //Encontrar plantas por etiquetas
+  router.get("/findByLabel/:id", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "SEARCH_SEE", true) }], plantController.findByLabel);
 
   /***************/
   app.use(

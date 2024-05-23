@@ -128,9 +128,11 @@
         <div class="col-md-6 col-12" v-if="plantInfo != null">
             <div class="card my-2">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Altitudes</h5>
+                    <h5 class="card-title mb-0">Temperatura ideal por Mes</h5>
                 </div>
                 <div class="card-body">
+                    <BarChart ref="barchart" :dataSet="dataResponseBar" :categories="barCategories" chartID="barchart"
+                        estilo="width: 100%; height: 350px;" v-if="barGraphReady" />
                 </div>
             </div>
         </div>
@@ -189,13 +191,15 @@ import { useRouter } from 'vue-router';
 import Leafletmap from "@/components/maps/Leafletmap.vue";
 import Modal from "@/components/commons/Modal.vue";
 import Input from "@/components/commons/Input.vue";
+import BarChart from "./components/BarChart";
 
 
 export default {
     components: {
         Leafletmap,
         Modal,
-        Input
+        Input,
+        BarChart
     },
     data() {
         return {
@@ -213,7 +217,10 @@ export default {
             newDiseaseTitle: "",
             newDiseaseDescription: "",
             newDiseaseTreatment: "",
-            newDiseaseCommonName: ""
+            newDiseaseCommonName: "",
+            dataResponseBar: [],
+            barCategories: [],
+            barGraphReady: false
         };
     },
     async mounted() {
@@ -225,6 +232,7 @@ export default {
     watch: {
         plantInfo: function () {
             this.createMarkers();
+            this.graphData();
         }
     },
     methods: {
@@ -303,7 +311,6 @@ export default {
                     nombre_planta: this.plantInfo.nombre_cientifico
                 }
                 const response = await DiseaseService.newDisease(body);
-                console.log(response);
                 if (response.data._id == undefined) {
                     await PlantService.insertDisease(this.plantInfo.nombre_cientifico, response.data);
                 } else {
@@ -315,6 +322,40 @@ export default {
                 this.newDiseaseTreatment = "";
                 this.retriveDetails();
                 this.$refs.newDisease.closeModal();
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        graphData() {
+            try {
+                this.barCategories = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                let tempMin = [26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26];
+                let tempMax = [15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
+                // Objeto para la grafica de barras
+                let barObject1 = {
+                    name: 'Temperatura Minima',
+                    data: tempMin,
+                    type: 'bar',
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: 'rgba(180, 180, 180, 0.2)'
+                    }
+                }
+
+                // Objeto para la grafica de barras
+                let barObject2 = {
+                    name: 'Temperatura Maxima',
+                    data: tempMax,
+                    type: 'bar',
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: 'rgba(180, 180, 180, 0.2)'
+                    }
+                }
+
+                this.dataResponseBar.push(barObject1);
+                this.dataResponseBar.push(barObject2);
+                this.barGraphReady = true;
             } catch (error) {
                 console.error(error);
             }

@@ -8,15 +8,8 @@
       <!-- TABS -->
       <ul class="nav nav-tabs ms-2 border-bottom-0">
         <li class="nav-item">
-          <a
-            class="nav-link active"
-            id="profile-tab"
-            data-bs-toggle="tab"
-            href="#profile"
-            role="tab"
-            aria-controls="profile"
-            aria-selected="true"
-            >{{ 'Administrar' }}
+          <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab"
+            aria-controls="profile" aria-selected="true">{{ 'Administrar' }}
           </a>
         </li>
       </ul>
@@ -26,17 +19,8 @@
           <div class="d-flex align-items-start">
             <div class="flex-grow-1">
               <!-- TABS CONTENT -->
-              <div
-                class="tab-content"
-                id="myTabContent"
-                style="padding: 4vh 1vw 1vh 1vw"
-              >
-                <div
-                  class="tab-pane fade show active"
-                  id="profile"
-                  role="tabpanel"
-                  aria-labelledby="profile-tab"
-                >
+              <div class="tab-content" id="myTabContent" style="padding: 4vh 1vw 1vh 1vw">
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                   <EditProfile />
                 </div>
               </div>
@@ -52,8 +36,8 @@
 <script>
 import Info from "./components/Info";
 import EditProfile from "./components/EditProfile.vue";
-import { useUsersStore } from '@/stores/UsersVuex'; 
-import { useCommonStore } from '@/stores/CommonVuex'; 
+import { useUsersStore } from '@/stores/UsersVuex';
+import { useCommonStore } from '@/stores/CommonVuex';
 
 export default {
   data() {
@@ -75,5 +59,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

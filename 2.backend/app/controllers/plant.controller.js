@@ -78,7 +78,7 @@ exports.findByField = async (req , res) => {
             return res.status(200).send({data: [results], code: 2001}); 
         }
         //Si se llega a este return significa que no se ha encontrado nada
-        return res.status(200).send({message: 'Planta no encontrada', code: 3001});
+        return res.status(200).send({message: 'Planta no encontrada', code: 3000});
       } catch (err) {
         console.error("Plant Contoller: findByField")
         console.error(err);
@@ -139,4 +139,20 @@ exports.addDisease = async (req,res) => {
     console.error(err);
     return res.status(500).send({message: 'Error', code: 3000});
   }
+};
+
+exports.findByLabel = async (req , res) => {
+  try {
+      let plants = await Plant.find({ etiquetas: req.params.id }).populate("enfermedades").populate("etiquetas");
+      console.log(plants);
+      if (plants.length > 0) {
+        return res.status(200).send({data: plants, code: 2001});
+      } else {
+        return res.status(200).send({message: 'Planta no encontrada', code: 3000});
+      }
+    } catch (err) {
+      console.error("Plant Contoller: findByLabel")
+      console.error(err);
+      return res.status(500).send({ message: 'Error', code: 3000 });
+    }
 };
