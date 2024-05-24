@@ -21,13 +21,13 @@ async function login(req, res) {
     if (!findUser || !passwordIsValid) {
       // If no dada or incorrect pasword -> wrong credentials
       return res.status(403).send({ message: 'Fallo en la autenticacion', code: 3000 });
-    }else if (!findUser.info.status){
+    } else if (!findUser.info.status) {
       // If account is not active
       return res.status(403).send({ message: 'Tu cuenta no esta activa', code: 3000 });
     } else {
       // Token list
-      const CurrentTokenList = findUser.token? findUser.token : [];
-      for (const ListedToken of CurrentTokenList){
+      const CurrentTokenList = findUser.token ? findUser.token : [];
+      for (const ListedToken of CurrentTokenList) {
         try {
           // Check each token expiration
           await jwt.verify(ListedToken, config.secret);
@@ -39,19 +39,19 @@ async function login(req, res) {
       }
 
       // Create new token
-      let token = jwt.sign({ 
-        _id: findUser._id, 
-        email: findUser.info.email, 
-        name: findUser.info.nombre_usuario, 
+      let token = jwt.sign({
+        _id: findUser._id,
+        email: findUser.info.email,
+        name: findUser.info.nombre_usuario,
         role: findUser.role
-      }, config.secret, { expiresIn: req.body.duration? req.body.duration : 3600 });
+      }, config.secret, { expiresIn: req.body.duration ? req.body.duration : 3600 });
 
       //Update user
       const userData = await User.findOneAndUpdate(
         { _id: findUser._id },
-        { $push: { token: { $each: [token] } }},
+        { $push: { token: { $each: [token] } } },
         // Return new document
-        { new: true } 
+        { new: true }
       ).populate('role');
 
       // response
@@ -60,7 +60,7 @@ async function login(req, res) {
         userData.info.lastAccess = new Date();
         await userData.save();
         await PostLog('SYSTEM ACCESS', `El usuario ${userData.info.nombre_usuario} ha accedido el sistema`, userData._id);
-        return res.status(200).send({user: userData, token: token});
+        return res.status(200).send({ user: userData, token: token });
       } else {
         return res.status(500).send({ message: 'Error en el login', code: 3000 });
       }
@@ -79,16 +79,16 @@ async function logout(req, res) {
     // Global logount flag
     const closeAllSessions = req.body.closeAllSessions;
 
-    if(closeAllSessions){
+    if (closeAllSessions) {
       // Remove all tokens
-      await User.updateOne({ _id: tokenedUser._id }, {  token: []  });
-      return res.status(200).send({ message: 'Todas las sesiones cerradas con exito', code: 2000});
-    }else{
+      await User.updateOne({ _id: tokenedUser._id }, { token: [] });
+      return res.status(200).send({ message: 'Todas las sesiones cerradas con exito', code: 2000 });
+    } else {
       // Token to remove
       const token = req.headers["x-access-token"];
       //Update user
       await User.updateOne({ _id: tokenedUser._id }, { $pull: { token: token } });
-      return res.status(200).send({ message: 'Sesion cerrada con exito', code: 2000});
+      return res.status(200).send({ message: 'Sesion cerrada con exito', code: 2000 });
     }
   } catch (err) {
     console.error("Auth controller: logout")
@@ -98,7 +98,7 @@ async function logout(req, res) {
 }
 
 async function activateAccount(req, res) {
-  try{
+  try {
     const activationToken = req.body.activation;
     let payload = null;
     try {
@@ -108,84 +108,18 @@ async function activateAccount(req, res) {
       return res.status(403).send({ message: 'Activacion caducada', code: 3000 });
     }
     const FindUser = await User.findOne({ _id: payload?._id });
-    if(!FindUser || FindUser.activation != activationToken){
+    if (!FindUser || FindUser.activation != activationToken) {
       return res.status(403).send({ message: 'Activacion caducada', code: 3000 });
     }
-    await User.updateOne({_id: FindUser._id}, { 'info.status': true, activation: null });
+    await User.updateOne({ _id: FindUser._id }, { 'info.status': true, activation: null });
     await PostLog('ACCOUNT ACTIVATION', `El usuario ${FindUser.info.nombre_usuario} ha activado la cuenta con exito`, FindUser._id);
-    return res.status(200).send({ message: 'Cuenta activada', code: 2000});
+    return res.status(200).send({ message: 'Cuenta activada', code: 2000 });
   } catch (err) {
     console.error("Auth controller: activateAccount")
     console.error(err);
     return res.status(500).send({ message: 'Error', code: 3000 });
   }
 }
-
-// async function checkRecoveryToken(req, res) {
-//   try{
-//     const recoveryToken = req.body.recovery;
-//     let payload = null;
-//     try {
-//       payload = await jwt.verify(recoveryToken, config.secret);
-//     }
-//     catch (error) {
-//       return res.status(403).send({ message: 'Recovery expired', code: 3000 });
-//     }
-//     const FindUser = await User.findOne({ _id: payload?._id });
-//     if(!FindUser || FindUser.recovery != recoveryToken){
-//       return res.status(403).send({ message: 'Recovery expired', code: 3000 });
-//     }
-//     return res.status(200).send({ message: 'Recovery active', data: FindUser._id, code: 2001});
-//   } catch (err) {
-//     console.error("Auth controller: checkRecoveryToken")
-//     console.error(err);
-//     return res.status(500).send({ message: 'Error', code: 3000 });
-//   }
-// }
-
-// async function setRecoveryToken(req, res){
-//   try{
-//     const email = req.body.email;
-//     if(email === undefined){
-//       return res.status(400).send({ message: 'Incomplete request', code: 3000 });
-//     }
-//     const FindUser = await User.findOne({'info.email': email});
-//     if(!FindUser){
-//       return res.status(403).send({ message: 'Email not registered', code: 3000 });
-//     }
-//     if(FindUser.recovery){
-//       try {
-//         await jwt.verify(FindUser.recovery, config.secret);
-//         return res.status(403).send({ message: 'Password recovery already requested', code: 3000 });
-//       }catch (error) {}
-//     }
-//     // Create recovery token
-//     let token = jwt.sign({ 
-//       _id: FindUser._id, 
-//       email: FindUser.info.email, 
-//       name: FindUser.info.nombre_usuario, 
-//       role: FindUser.role
-//     }, config.secret, { expiresIn: 1800 });
-//     await User.updateOne({ _id: FindUser._id },{ recovery: token });
-//     try{
-//       await Mailer(
-//         'Bonodere - Password recovery',
-//         `Please follow this link to reset your password: https://bonodere.famluro.es/recover?token=${token}`,
-//         FindUser.info.email
-//       );
-//     }catch(mailerError){
-//       console.log(mailerError);
-//       return res.status(403).send({ message: 'Email does not exist', code: 3000 });
-//     }
-//     await PostLog('RECOVERY REQUEST', `User ${FindUser.info.nombre_usuario} requested password recovery`, FindUser._id);
-//     return res.status(200).send({ message: 'Recovery submited', code: 2000 });
-//   } catch (err) {
-//     console.error("Auth controller: setRecoveryToken")
-//     console.error(err);
-//     return res.status(500).send({ message: 'Error', code: 3000 });
-//   }
-// }
-
 
 function encryptPassword(password) {
   return bcrypt.hashSync(password, 8);

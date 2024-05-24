@@ -31,7 +31,6 @@ exports.getLogs = async (req, res) => {
         const SystemLogCount = await SystemLog.countDocuments(findParams);
         // Execute the search process
         const FoundSystemLogs = await SystemLog.find(findParams).sort(sortParams).skip(offset).limit(limit).populate('user');
-        console.log(FoundSystemLogs)
         if(FoundSystemLogs && FoundSystemLogs.length > 0){
             let response = {
                 data: FoundSystemLogs,

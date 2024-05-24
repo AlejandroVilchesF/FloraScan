@@ -9,7 +9,7 @@
                 Por favor introduce los datos de la nueva planta.
             </p>
             <hr />
-            <form ref="plantForm">
+            <form ref="plantForm" class="position-relative">
                 <!-- Primera Fila -->
                 <div class="row">
                     <div class="col-md-6 col-12">
@@ -40,7 +40,68 @@
                         <input class="form-control mb-3" type="file" ref="plantImage" id="plantImage"
                             @change="checkPlantImage" :class="plantImageCheck ? 'bg-danger' : ''">
                     </div>
+                </div>
+                <div class="position-absolute bottom-0 end-0" @click="showExtraInfo" v-if="!extraInfo">
+                    <button class="btn btn-success"><i class="fa-solid fa-sitemap"></i> Informacion adicional</button>
+                </div>
+                <!-- Informacion adicional -->
+                <div class="row" v-if="extraInfo">
+                    <h6 class="form-label">Temperaturas ideales segun estacion</h6>
+                    <!-- Primavera -->
                     <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Primavera</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number" v-model="spring.minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number" v-model="spring.maxima">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Verano -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Verano</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number" v-model="summer.minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number" v-model="summer.maxima">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Otoño -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Otoño</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number" v-model="autumn.minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number" v-model="autumn.maxima">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Invierno -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Invierno</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number" v-model="winter.minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number" v-model="winter.maxima">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -129,12 +190,29 @@ export default {
             plantImageCheck: false,
             ubicationCheck: false,
             plantStore: usePlantStore(),
-            router: useRouter()
+            router: useRouter(),
+            extraInfo: false,
+            spring: {
+                minima: null,
+                maxima: null
+            },
+            summer: {
+                minima: null,
+                maxima: null
+            },
+            autumn: {
+                minima: null,
+                maxima: null
+            },
+            winter: {
+                minima: null,
+                maxima: null
+            }
         };
     },
     mounted() {
         //Si llegamos desde el modal confirm de identificacion obtenemos los datos guardados en PiniaStore
-        if (this.router.options.history.state.back == "/general/identificacion"){
+        if (this.router.options.history.state.back == "/general/identificacion") {
             this.handleIdentifyRedirection();
         }
     },
@@ -180,7 +258,8 @@ export default {
                         genus: this.genus,
                         description: this.description,
                         image: imagen,
-                        ubication: this.ubication
+                        ubication: this.ubication,
+                        temp: [this.spring,this.summer,this.autumn,this.winter]
                     }
                     try {
                         await PlantService.newPlant(body);
@@ -256,13 +335,16 @@ export default {
                 this.errors = this.errors.filter(error => error !== "La imagen de la planta no debe estar vacia");
             }
         },
-        handleIdentifyRedirection(){
+        handleIdentifyRedirection() {
             document.getElementById("appInner").scrollTo({ top: 0, left: 0, behavior: "smooth" });
-            this.scientificName=this.plantStore.scientificName;
-            this.commonName=this.plantStore.commonName;
-            this.family=this.plantStore.family;
-            this.genus=this.plantStore.genus;
+            this.scientificName = this.plantStore.scientificName;
+            this.commonName = this.plantStore.commonName;
+            this.family = this.plantStore.family;
+            this.genus = this.plantStore.genus;
             this.plantStore.resetState();
+        },
+        showExtraInfo() {
+            this.extraInfo = true;
         }
     }
 };

@@ -27,6 +27,7 @@ module.exports = (mongoose) => {
       imagenes: [Object],
       enfermedades: [{ type: mongoose.Schema.ObjectId, ref: "enfermedades" }],
       etiquetas: [{ type: mongoose.Schema.ObjectId, ref: "etiquetas" }],
+      temperaturas:[Object]
     },
     { versionKey: false, timestamps: true }
   );

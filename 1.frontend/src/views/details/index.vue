@@ -28,7 +28,7 @@
                 :frameless="true">
                 <template v-slot:modalBody>
                     <ul class="list-inline">
-                        <li class="list-inline-item" v-for="label in labelList">
+                        <li class="list-inline-item labelCursor" v-for="label in labelList">
                             <span class="badge" :class="checkLabel(label) ? 'bg-success' : 'bg-primary'"
                                 @click="handleLabels(label, $event)">{{ label.nombre_etiqueta
                                 }}</span>
@@ -220,7 +220,9 @@ export default {
             newDiseaseCommonName: "",
             dataResponseBar: [],
             barCategories: [],
-            barGraphReady: false
+            barGraphReady: false,
+            tempMin: [],
+            tempMax: []
         };
     },
     async mounted() {
@@ -232,7 +234,9 @@ export default {
     watch: {
         plantInfo: function () {
             this.createMarkers();
-            this.graphData();
+            if (this.plantInfo.temperaturas.length > 0) {
+                this.graphData();
+            }
         }
     },
     methods: {
@@ -328,13 +332,13 @@ export default {
         },
         graphData() {
             try {
-                this.barCategories = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                let tempMin = [26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26];
-                let tempMax = [15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
+                this.dataResponseBar=[];
+                this.barCategories = ["Primavera", "Verano", "Otoño", "Invierno"];
+                this.formatTemps();
                 // Objeto para la grafica de barras
                 let barObject1 = {
                     name: 'Temperatura Minima',
-                    data: tempMin,
+                    data: this.tempMin,
                     type: 'bar',
                     showBackground: true,
                     backgroundStyle: {
@@ -345,7 +349,7 @@ export default {
                 // Objeto para la grafica de barras
                 let barObject2 = {
                     name: 'Temperatura Maxima',
-                    data: tempMax,
+                    data: this.tempMax,
                     type: 'bar',
                     showBackground: true,
                     backgroundStyle: {
@@ -359,6 +363,23 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        formatTemps() {
+            this.tempMax=[];
+            this.tempMin=[];
+            this.plantInfo.temperaturas.forEach(el => {
+                if (el.minima != null) {
+                    this.tempMin.push(el.minima);
+                } else {
+                    this.tempMin.push(0);
+                }
+                if (el.maxima != null) {
+                    this.tempMax.push(el.maxima);
+                } else {
+                    this.tempMax.push(0);
+                }
+
+            })
         }
     }
 };
@@ -376,5 +397,8 @@ export default {
 img {
     height: 150px;
     width: 150px;
+}
+.labelCursor{
+    cursor: pointer;
 }
 </style>

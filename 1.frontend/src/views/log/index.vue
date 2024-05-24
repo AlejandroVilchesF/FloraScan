@@ -2,38 +2,16 @@
   <div>
     <div class="row">
       <div class="col-12 col-md-4">
-        <Select 
-          label="Tipo de Log"
-          id="searchLogType"
-          :modelValue="findParams.logType"
-          :options="logTypeOptions"
-          :removeDefault="true"
-          valKey="value"
-          textKey="key"
-          icon="fas fa-sort"
-          @change="changeLogType($event)"
-        />
+        <Select label="Tipo de Log" id="searchLogType" :modelValue="findParams.logType" :options="logTypeOptions"
+          :removeDefault="true" valKey="value" textKey="key" icon="fas fa-sort" @change="changeLogType($event)" />
       </div>
     </div>
     <BlockFull title="System Log">
       <template v-slot:content>
-        <Table
-          ref="logTable"
-          :columns="log_columns"
-          :rows="log_rows"
-          id="logTable"
-          :isLoading="loadingTable"
-          :serverSize="true"
-          :totalRecords="totalRecords"
-          :showOptions="false"
-          :searchActive="false"
-          :searchDisabled="true"
-          :showRowNumber="false"
-          :pageJumpOption="true"
-          :sortAllowed="false"
-          @onPageChange="onPageChange"
-          @onPerPageChange="onPerPageChange"
-        >
+        <Table ref="logTable" :columns="log_columns" :rows="log_rows" id="logTable" :isLoading="loadingTable"
+          :serverSize="true" :totalRecords="totalRecords" :showOptions="false" :searchActive="false"
+          :searchDisabled="true" :showRowNumber="false" :pageJumpOption="true" :sortAllowed="false"
+          @onPageChange="onPageChange" @onPerPageChange="onPerPageChange">
           <template v-slot:top-right-addon>
             {{ 'Entradas: ' }}{{ totalRecords }}
           </template>
@@ -98,7 +76,9 @@ export default {
         'SELF UPDATE',
         'ROLE CREATE',
         'ROLE UPDATE',
-        'PLANT CREATE'
+        'PLANT CREATE',
+        'PLANT UPDATE',
+        'DISEASE CREATE'
       ],
       dangerLogs: [
         'USER DELETE',
@@ -108,23 +88,25 @@ export default {
       ],
       secondaryLogs: [],
       logTypeOptions: [
-        {key: 'Cualquiera', value: 'any'},
-        {key: 'SYSTEM ACCESS', value: 'SYSTEM ACCESS'},
-        {key: 'ACCOUNT REGISTER', value: 'ACCOUNT REGISTER'},
-        {key: 'RECOVERY REQUEST', value: 'RECOVERY REQUEST'},
-        {key: 'ACCOUNT ACTIVATION', value: 'ACCOUNT ACTIVATION'},
-        {key: 'PASSWORD RESET', value: 'PASSWORD RESET'},
-        {key: 'ADMIN', value: 'ADMIN'},
-        {key: 'USER CREATE', value: 'USER CREATE'},
-        {key: 'USER UPDATE', value: 'USER UPDATE'},
-        {key: 'SELF UPDATE', value: 'SELF UPDATE'},
-        {key: 'ROLE CREATE', value: 'ROLE CREATE'},
-        {key: 'ROLE UPDATE', value: 'ROLE UPDATE'},
-        {key: 'USER DELETE', value: 'USER DELETE'},
-        {key: 'SELF DELETE', value: 'SELF DELETE'},
-        {key: 'ROLE DELETE', value: 'ROLE DELETE'},
-        {key: 'PLANT CREATE', value: 'PLANT CREATE'},
-        {key: 'PERMISSION VIOLATION', value: 'PERMISSION VIOLATION'},
+        { key: 'Cualquiera', value: 'any' },
+        { key: 'SYSTEM ACCESS', value: 'SYSTEM ACCESS' },
+        { key: 'ACCOUNT REGISTER', value: 'ACCOUNT REGISTER' },
+        { key: 'RECOVERY REQUEST', value: 'RECOVERY REQUEST' },
+        { key: 'ACCOUNT ACTIVATION', value: 'ACCOUNT ACTIVATION' },
+        { key: 'PASSWORD RESET', value: 'PASSWORD RESET' },
+        { key: 'ADMIN', value: 'ADMIN' },
+        { key: 'USER CREATE', value: 'USER CREATE' },
+        { key: 'USER UPDATE', value: 'USER UPDATE' },
+        { key: 'SELF UPDATE', value: 'SELF UPDATE' },
+        { key: 'ROLE CREATE', value: 'ROLE CREATE' },
+        { key: 'ROLE UPDATE', value: 'ROLE UPDATE' },
+        { key: 'USER DELETE', value: 'USER DELETE' },
+        { key: 'SELF DELETE', value: 'SELF DELETE' },
+        { key: 'ROLE DELETE', value: 'ROLE DELETE' },
+        { key: 'PLANT CREATE', value: 'PLANT CREATE' },
+        { key: 'PLANT UPDATE', value: 'PLANT UPDATE' },
+        { key: 'DISEASE CREATE', value: 'DISEASE CREATE' },
+        { key: 'PERMISSION VIOLATION', value: 'PERMISSION VIOLATION' },
       ]
     };
   },
@@ -137,40 +119,40 @@ export default {
     this.$refs.logTable.setParams(this.serverParams.page, this.serverParams.perPage);
     this.retrieveLogs();
   },
-  computed: { },
+  computed: {},
   methods: {
     /************************ FUNCTIONS SERVER SIZED TABLE **************************/
-      /**
-       * Esta función actualiza el objeto de los parámetros para el servidor
-       * @param {*} newProps
-       */
-       updateParams(newProps) {
-          this.serverParams = Object.assign({}, this.serverParams, newProps);
-      },
+    /**
+     * Esta función actualiza el objeto de los parámetros para el servidor
+     * @param {*} newProps
+     */
+    updateParams(newProps) {
+      this.serverParams = Object.assign({}, this.serverParams, newProps);
+    },
 
-      /**
-       * Esta función cambia la página actual
-       * @param {Object} params
-       */
-      onPageChange(params) {
-          this.updateParams({ page: params.currentPage });
-          this.retrieveLogs();
-      },
+    /**
+     * Esta función cambia la página actual
+     * @param {Object} params
+     */
+    onPageChange(params) {
+      this.updateParams({ page: params.currentPage });
+      this.retrieveLogs();
+    },
 
-      /**
-       * Esta función cambia el número de registros por página
-       * @param {Object} params
-       */
-      onPerPageChange(params) {
-          this.updateParams({ perPage: params.currentPerPage });
-          this.retrieveLogs();
-      },
-      /********************************************************************************/
-    async retrieveLogs(){
+    /**
+     * Esta función cambia el número de registros por página
+     * @param {Object} params
+     */
+    onPerPageChange(params) {
+      this.updateParams({ perPage: params.currentPerPage });
+      this.retrieveLogs();
+    },
+    /********************************************************************************/
+    async retrieveLogs() {
       this.loadingTable = true;
-      try{
+      try {
         let useFindParams = {};
-        if(this.findParams.logType != 'any'){
+        if (this.findParams.logType != 'any') {
           useFindParams['logType'] = this.findParams.logType;
         }
         const response = await LogService.getLogs(this.serverParams, useFindParams);
@@ -178,48 +160,48 @@ export default {
         this.totalRecords = response.data.totalRecords;
         await this.populateLogsRows();
         this.loadingTable = false;
-      }catch(err){
+      } catch (err) {
         this.loadingTable = false;
         console.log(err);
       }
     },
-    populateLogsRows(){
+    populateLogsRows() {
       return new Promise((resolve) => {
         this.log_rows = [];
-          let localLogRows = [];
-          for (const entry of this.logs){
-            let color = this.getColorType(entry.logType)
-            let insertData = {
-              logType: `<span class="p-2 d-block bg-${color} text-white fw-bold rounded rounded-4">${entry.logType}</span>`,
-              log: entry.log,
-              createdAt: dayjs(new Date(entry.createdAt)).format('YYYY-MM-DD H:mm A')
-            }
-            localLogRows.push(insertData);
+        let localLogRows = [];
+        for (const entry of this.logs) {
+          let color = this.getColorType(entry.logType)
+          let insertData = {
+            logType: `<span class="p-2 d-block bg-${color} text-white fw-bold rounded rounded-4">${entry.logType}</span>`,
+            log: entry.log,
+            createdAt: dayjs(new Date(entry.createdAt)).format('YYYY-MM-DD H:mm A')
           }
-          this.log_rows = JSON.parse(JSON.stringify(localLogRows));
-          if(this.log_rows.length == 0){
-            this.$refs.logTable.clearTable();
-          }
-          this.loadingTable = false;
-          resolve();
+          localLogRows.push(insertData);
+        }
+        this.log_rows = JSON.parse(JSON.stringify(localLogRows));
+        if (this.log_rows.length == 0) {
+          this.$refs.logTable.clearTable();
+        }
+        this.loadingTable = false;
+        resolve();
       });
     },
-    getColorType(type){
-      if(this.primaryLogs.includes(type)){
+    getColorType(type) {
+      if (this.primaryLogs.includes(type)) {
         return 'primary';
-      }else if(this.successLogs.includes(type)){
+      } else if (this.successLogs.includes(type)) {
         return 'success';
-      }else if(this.dangerLogs.includes(type)){
+      } else if (this.dangerLogs.includes(type)) {
         return 'danger';
-      }else{
+      } else {
         return 'secondary';
       }
     },
-    changeLogType(event){
+    changeLogType(event) {
       this.findParams.logType = event.target.value;
       this.retrieveLogs();
     }
   },
- 
+
 };
 </script>

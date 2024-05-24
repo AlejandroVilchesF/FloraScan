@@ -94,8 +94,8 @@
                     <li class="list-group-item row" v-for="item in infoList">
                         <div class="row">
                             <div class="col-md-6 col-12 mt-1">
-                                <img :src="img" class="img-fluid" style="width: 25%;"
-                                    v-for="img in item.imagenes.slice(0, 4)">
+                                <img :src="img" class="img-fluid mx-1" style="width: 120px; height: 120px;"
+                                    v-for="img in item.imagenes.slice(0, 3)">
                             </div>
                             <div class="col-md-6 col-12 mt-1">
                                 <h6 class="plantName" @click="seeDetails(item.nombre_cientifico)">{{
