@@ -41,6 +41,7 @@
                             @change="checkPlantImage" :class="plantImageCheck ? 'bg-danger' : ''">
                     </div>
                 </div>
+                <!-- Boton Show Extra Info -->
                 <div class="position-absolute bottom-0 end-0" @click="showExtraInfo" v-if="!extraInfo">
                     <button class="btn btn-success"><i class="fa-solid fa-sitemap"></i> Informacion adicional</button>
                 </div>
@@ -103,6 +104,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Boton de ocultar informacion adicional -->
+                <div class="text-end" @click="showExtraInfo" v-if="extraInfo">
+                    <button class="btn btn-danger"><i class="fa-solid fa-sitemap"></i> Ocultar informacion adicional</button>
                 </div>
             </form>
         </div>
@@ -344,7 +349,7 @@ export default {
             this.plantStore.resetState();
         },
         showExtraInfo() {
-            this.extraInfo = true;
+            this.extraInfo = !this.extraInfo;
         }
     }
 };

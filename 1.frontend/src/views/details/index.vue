@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12 col-md-8">
                     <h6>Datos</h6>
-                    <p>{{ plantInfo.descripcion }}</p>
+                    <p v-for="linea in descriptionAux">{{ linea }}</p>
                 </div>
                 <div class="col-12 col-md-4">
                     <h6>Etiquetas</h6>
@@ -222,7 +222,8 @@ export default {
             barCategories: [],
             barGraphReady: false,
             tempMin: [],
-            tempMax: []
+            tempMax: [],
+            descriptionAux:""
         };
     },
     async mounted() {
@@ -244,6 +245,7 @@ export default {
             try {
                 const response = await PlantService.getPlant(this.plantStore.scientificName);
                 this.plantInfo = response.data;
+                this.descriptionAux=this.plantInfo.descripcion.split("\n");
             } catch (error) {
                 console.error(error);
             }
