@@ -84,6 +84,7 @@ export default {
         'USER DELETE',
         'SELF DELETE',
         'ROLE DELETE',
+        "PLANT DELETE",
         'PERMISSION VIOLATION'
       ],
       secondaryLogs: [],
@@ -105,6 +106,7 @@ export default {
         { key: 'ROLE DELETE', value: 'ROLE DELETE' },
         { key: 'PLANT CREATE', value: 'PLANT CREATE' },
         { key: 'PLANT UPDATE', value: 'PLANT UPDATE' },
+        { key: 'PLANT DELETE', value: 'PLANT DELETE' },
         { key: 'DISEASE CREATE', value: 'DISEASE CREATE' },
         { key: 'PERMISSION VIOLATION', value: 'PERMISSION VIOLATION' },
       ]

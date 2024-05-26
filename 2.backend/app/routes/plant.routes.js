@@ -20,6 +20,16 @@ module.exports = app => {
   router.post("/addDisease", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_SEE") }], plantController.addDisease);
   //Encontrar plantas por etiquetas
   router.get("/findByLabel/:id", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "SEARCH_SEE", true) }], plantController.findByLabel);
+  //Eliminar una planta por su nombre
+  router.delete("/delete/:nombre_cientifico", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_ADMIN", true) }], plantController.deleteByName);
+  //Eliminar una planta por su nombre
+  router.put("/update/:id", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_ADMIN", true) }], plantController.updatePlantInfo);
+  //Eliminar una enfermedad de una planta
+  router.delete("/removeDisease/:plantId/:diseaseId", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_ADMIN", true) }], plantController.removeDisease);
+  //Actualizar las temperaturas de una planta
+  router.put("/updateTemps/:id", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_ADMIN", true) }], plantController.updateTemps);
+  //Eliminar una imagen de una planta
+  router.post("/removeImage", [auth.verifyToken, function (res, req, next) { auth.authRoute(res, req, next, "DETAILS_ADMIN", true) }], plantController.removePicture);
 
   /***************/
   app.use(

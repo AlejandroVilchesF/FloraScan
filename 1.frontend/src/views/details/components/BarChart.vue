@@ -91,7 +91,6 @@ export default {
         this.option.xAxis.data = await this.categories;
         this.option.legend.data = ["Temperatura Minima", "Temperatura Maxima"];
         this.option.series = await this.dataSet;
-        console.log(this.option);
     },
 
     methods: {

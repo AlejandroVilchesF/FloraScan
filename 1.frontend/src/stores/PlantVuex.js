@@ -5,7 +5,8 @@ export const usePlantStore = defineStore('plants', {
     scientificName: "",
     family: "",
     genus: "",
-    commonName: ""
+    commonName: "",
+    description:"",
   }),
 
   actions: {
@@ -23,6 +24,13 @@ export const usePlantStore = defineStore('plants', {
     },
     setDetailSearch(scientificName){
       this.scientificName=scientificName;
+    },
+    setDefaultData(nombre_cientifico,nombre_comun,familia,genero,descripcion){
+      this.scientificName = nombre_cientifico;
+      this.commonName = nombre_comun;
+      this.family = familia;
+      this.genus = genero;
+      this.description=descripcion;
     }
   },
 });

@@ -36,6 +36,25 @@ class PlantService {
     findPlantsByLabel(id){
         return http.get(`/plant/findByLabel/${id}`);
     }
+    deleteByName(nombre_cientifico){
+        return http.delete(`/plant/delete/${nombre_cientifico}`);
+    }
+
+    updatePlantInfo(body,id){
+        return http.put(`/plant/update/${id}`,body);
+    }
+
+    removeDisease(plantId,diseaseId){
+        return http.delete(`/plant/removeDisease/${plantId}/${diseaseId}`);
+    }
+
+    updatePlantTemps(id,body){
+        return http.put(`/plant/updateTemps/${id}`,body);
+    }
+
+    removePicture(body){
+        return http.post(`/plant/removeImage`,body);
+    }
 
 }
 

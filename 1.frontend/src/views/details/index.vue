@@ -134,8 +134,92 @@
                     <BarChart ref="barchart" :dataSet="dataResponseBar" :categories="barCategories" chartID="barchart"
                         estilo="width: 100%; height: 350px;" v-if="barGraphReady" />
                 </div>
+                <div class="card-footer" v-if="isAdmin()">
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateTempModal">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        Modificar Temperaturas
+                    </button>
+                </div>
             </div>
         </div>
+        <!-- Modal de temperaturas -->
+        <Modal ref="updateTempModal" id="updateTempModal" :title="'Temperaturas'" :footer="true" :frameless="true"
+            v-if="plantInfo != null">
+            <template v-slot:modalBody>
+                <div class="row">
+                    <h6 class="form-label">Temperaturas ideales segun estacion</h6>
+                    <!-- Primavera -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Primavera</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[0].minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[0].maxima">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Verano -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Verano</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[1].minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[1].maxima">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Otoño -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Otoño</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[2].minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[2].maxima">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Invierno -->
+                    <div class="col-md-6 col-12">
+                        <label for="temp" class="form-label">Invierno</label>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                Minima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[3].minima">
+                            </div>
+                            <div class="col-md-6 col-12">
+                                Maxima
+                                <input class="form-control mb-3" type="number"
+                                    v-model="plantInfo.temperaturas[3].maxima">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:modalFooter>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tempUpdateConfirm">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    Acutalizar Temperaturas</button>
+            </template>
+        </Modal>
         <!-- Modal de detalles de enfermedad -->
         <Modal ref="diseaseDetails" id="diseaseDetails" :title="diseaseTitle" :footer="true" :frameless="true">
             <template v-slot:modalBody>
@@ -151,13 +235,21 @@
                 </div>
             </template>
             <template v-slot:modalFooter>
-                <ul class="list-group">
+                <ul class="list-group list-group-horizontal">
                     <li class="list-group-item">
                         Nombre Comun: <span class="text-muted">{{ diseaseCommonName }}</span>
+                    </li>
+                    <li class="list-group-item bg-danger btnHover" data-bs-toggle="modal"
+                        data-bs-target="#deleteDiseaseConfirm" v-if="isAdmin()">
+                        <i class="fa-solid fa-trash"></i>
                     </li>
                 </ul>
             </template>
         </Modal>
+        <!-- Modal de confirmacion de Eliminar Enfermedad -->
+        <ModalConfirm id="deleteDiseaseConfirm" title="Eliminar Enfermedad"
+            message="La enfermedad seleccionada sera eliminada de forma permanente de la planta ¿Quieres continuar?"
+            confirm="Si, elimina la enfermedad" reject="No, he cometido un error" />
     </div>
     <!-- Galeria de Imagenes -->
     <div class="card my-2" v-if="plantInfo != null">
@@ -172,11 +264,95 @@
             </ul>
         </div>
         <!-- Modal para mostrar la imagen en grande -->
-        <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="false" :frameless="true">
+        <Modal ref="imageModal" id="imageModal" :title="'Imagen Original'" :footer="true" :frameless="true">
             <template v-slot:modalBody>
                 <img class="img-fluid" :src="largeImage" alt="Imagen original" style="width: 100%; height: 100%;">
             </template>
+            <template v-slot:modalFooter v-if="isAdmin()">
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteImage">
+                    <i class="fa-solid fa-trash"></i>
+                    Eliminar Imagen
+                </button>
+            </template>
         </Modal>
+    </div>
+    <div class="card my-2" v-if="plantInfo != null && isAdmin()">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Acciones de administrador</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePlantModal">
+                        <i class="fa-solid fa-dumpster"></i>
+                        Eliminar Planta
+                    </button>
+                </li>
+                <li class="list-group-item">
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateInfoDisplay"
+                        @click="resetInfo">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        Modificar Datos
+                    </button>
+                </li>
+            </ul>
+            <!-- Modal de confirmacion de Eliminar Planta -->
+            <ModalConfirm id="deletePlantModal" title="Eliminar Planta"
+                message="La planta seleccionada sera eliminada de forma permanente de la base de datos ¿Quieres continuar?"
+                confirm="Si, elimina la planta" reject="No, he cometido un error" />
+            <!-- Modal de modificacion de informacion -->
+            <Modal ref="updateInfoDisplay" id="updateInfoDisplay" :title="'Informacion de la planta'" :footer="true"
+                :frameless="true">
+                <template v-slot:modalBody>
+                    <!-- Primera Fila -->
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <Input :label="'Nombre Científico'" id="cientificiName" type="text"
+                                v-model="plantInfo.nombre_cientifico" :required="true" icon="fa-solid fa-flask"></Input>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <Input :label="'Nombre Común'" id="commonName" type="text" v-model="plantInfo.nombre_comun"
+                                :required="false" icon="fa-solid fa-comment"></Input>
+                        </div>
+                    </div>
+                    <!-- Segunda Fila -->
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <Input :label="'Familia'" id="family" type="text" v-model="plantInfo.familia"
+                                :required="true" icon="fa-solid fa-people-group"></Input>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <Input :label="'Género'" id="genus" type="text" v-model="plantInfo.genero" :required="true"
+                                icon="fa-solid fa-clipboard-list"></Input>
+                        </div>
+                    </div>
+                    <!-- Tercera Fila -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h6>Descripcion</h6>
+                            <textarea v-model="plantInfo.descripcion" id="description" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </template>
+                <template v-slot:modalFooter>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModalConfirm">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        Actualizar</button>
+                </template>
+            </Modal>
+            <!-- Modal de confirmacion de Eliminar Planta -->
+            <ModalConfirm id="updateModalConfirm" title="Actualizar informacion"
+                message="La planta seleccionada sera actualizada de forma permanente de la base de datos ¿Quieres continuar?"
+                confirm="Si, actualiza la planta" reject="No, he cometido un error" />
+        </div>
+        <!-- Modal de confirmacion de Eliminar Enfermedad -->
+        <ModalConfirm id="tempUpdateConfirm" title="Actualizacion de temperaturas"
+            message="La temperaturas introducidas sera actualizadas de forma permanente en la planta ¿Quieres continuar?"
+            confirm="Si, actualiza las temperaturas" reject="No, he cometido un error" />
+        <!-- Modal de confirmacion de Eliminar Imagen -->
+        <ModalConfirm id="deleteImage" title="Eliminar Imagen"
+            message="La imagen seleccionada sera eliminada de forma permanente de la base de datos ¿Quieres continuar?"
+            confirm="Si, elimina la imagen" reject="No, he cometido un error" />
     </div>
 </template>
 
@@ -188,29 +364,33 @@ import LabelService from "../../services/LabelService";
 import DiseaseService from "../../services/DiseaseService";
 import { usePlantStore } from "@/stores/PlantVuex";
 import { useRouter } from 'vue-router';
+import { useUsersStore } from "@/stores/UsersVuex";
 import Leafletmap from "@/components/maps/Leafletmap.vue";
 import Modal from "@/components/commons/Modal.vue";
 import Input from "@/components/commons/Input.vue";
 import BarChart from "./components/BarChart";
-
+import ModalConfirm from "@/components/commons/ModalConfirm.vue";
 
 export default {
     components: {
         Leafletmap,
         Modal,
         Input,
-        BarChart
+        BarChart,
+        ModalConfirm
     },
     data() {
         return {
             plantStore: usePlantStore(),
             router: useRouter(),
+            usersStore: useUsersStore(),
             plantInfo: null,
             lineList: [],
             diseaseTitle: "",
             diseaseDescription: "",
             diseaseTreament: "",
             diseaseCommonName: "",
+            diseaseId: "",
             largeImage: "",
             labelList: [],
             idLabelList: [],
@@ -223,13 +403,15 @@ export default {
             barGraphReady: false,
             tempMin: [],
             tempMax: [],
-            descriptionAux:""
+            descriptionAux: "",
         };
     },
     async mounted() {
         await this.retriveDetails();
         await this.retriveLabels();
         this.labelListFirstState();
+        this.listenConfirms();
+        this.setDefaultData();
     },
     computed: {},
     watch: {
@@ -245,7 +427,7 @@ export default {
             try {
                 const response = await PlantService.getPlant(this.plantStore.scientificName);
                 this.plantInfo = response.data;
-                this.descriptionAux=this.plantInfo.descripcion.split("\n");
+                this.descriptionAux = this.plantInfo.descripcion.split("\n");
             } catch (error) {
                 console.error(error);
             }
@@ -262,6 +444,7 @@ export default {
             this.diseaseDescription = objeto.descripcion;
             this.diseaseTreament = objeto.tratamiento;
             this.diseaseCommonName = objeto.nombre_comun;
+            this.diseaseId = objeto._id;
         },
         showModal(index) {
             // Obtener la URL de la imagen en grande
@@ -334,7 +517,7 @@ export default {
         },
         graphData() {
             try {
-                this.dataResponseBar=[];
+                this.dataResponseBar = [];
                 this.barCategories = ["Primavera", "Verano", "Otoño", "Invierno"];
                 this.formatTemps();
                 // Objeto para la grafica de barras
@@ -367,8 +550,8 @@ export default {
             }
         },
         formatTemps() {
-            this.tempMax=[];
-            this.tempMin=[];
+            this.tempMax = [];
+            this.tempMin = [];
             this.plantInfo.temperaturas.forEach(el => {
                 if (el.minima != null) {
                     this.tempMin.push(el.minima);
@@ -382,6 +565,111 @@ export default {
                 }
 
             })
+        },
+        async handelDelete() {
+            try {
+                const response = await PlantService.deleteByName(this.plantInfo.nombre_cientifico);
+                //Si se ha eliminado con exito redirigimos a la busqueda
+                if (response.code === 2000) {
+                    this.router.push({ name: "busqueda" });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        listenConfirms() {
+            if (this.isAdmin()) {
+                document.getElementById("deletePlantModal" + "confirmModalBtn").addEventListener('click', () => {
+                    this.handelDelete();
+                }, false);
+
+                document.getElementById("updateModalConfirm" + "confirmModalBtn").addEventListener('click', () => {
+                    this.handleUpdate();
+                }, false);
+
+                document.getElementById("deleteDiseaseConfirm" + "confirmModalBtn").addEventListener('click', () => {
+                    this.removeDisease();
+                }, false);
+
+                document.getElementById("tempUpdateConfirm" + "confirmModalBtn").addEventListener('click', () => {
+                    this.handleTempUpdate();
+                }, false);
+
+                document.getElementById("deleteImage" + "confirmModalBtn").addEventListener('click', () => {
+                    this.handleRemovePicture();
+                }, false);
+            }
+
+        },
+        async handleUpdate() {
+            try {
+                let body = {
+                    nombre_cientifico: this.plantInfo.nombre_cientifico.trim(),
+                    nombre_comun: this.plantInfo.nombre_comun.trim(),
+                    familia: this.plantInfo.familia.trim(),
+                    genero: this.plantInfo.genero.trim(),
+                    descripcion: this.plantInfo.descripcion.trim()
+                }
+                const response = await PlantService.updatePlantInfo(body, this.plantInfo._id);
+
+                if (response.code == 2000) {
+                    await this.plantStore.setDetailSearch(this.plantInfo.nombre_cientifico);
+                    await this.retriveDetails();
+                    this.setDefaultData();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        resetInfo() {
+            this.plantInfo.nombre_cientifico = this.plantStore.scientificName;
+            this.plantInfo.nombre_comun = this.plantStore.commonName;
+            this.plantInfo.familia = this.plantStore.family;
+            this.plantInfo.genero = this.plantStore.genus;
+            this.plantInfo.descripcion = this.plantStore.description;
+        },
+        setDefaultData() {
+            this.plantStore.setDefaultData(this.plantInfo.nombre_cientifico, this.plantInfo.nombre_comun, this.plantInfo.familia, this.plantInfo.genero, this.plantInfo.descripcion);
+        },
+        async removeDisease() {
+            try {
+                const response = await PlantService.removeDisease(this.plantInfo._id, this.diseaseId);
+                if (response.code == 2000) {
+                    this.retriveDetails();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async handleTempUpdate() {
+            try {
+                let body = {
+                    temperaturas: this.plantInfo.temperaturas
+                }
+                const response = await PlantService.updatePlantTemps(this.plantInfo._id, body);
+                if (response.code == 2000) {
+                    this.retriveDetails();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async handleRemovePicture() {
+            try {
+                let body = {
+                    id: this.plantInfo._id,
+                    imagen: this.largeImage
+                }
+                const response = await PlantService.removePicture(body);
+                if (response.code == 2000) {
+                    this.retriveDetails();
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        isAdmin() {
+            return this.usersStore.v_userdata?.role?.alias.includes("Admin");
         }
     }
 };
@@ -400,7 +688,12 @@ img {
     height: 150px;
     width: 150px;
 }
-.labelCursor{
+
+.labelCursor {
+    cursor: pointer;
+}
+
+.btnHover:hover {
     cursor: pointer;
 }
 </style>

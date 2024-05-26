@@ -1,5 +1,6 @@
 const Plant = require("../models").planta;
 const PostLog = require('./system.log.controller').postLog;
+const { DEFAULT_ROLES } = require("../config/costants/default.data");
 
 // Método de inserccion de planta
 exports.newPlant = async (req, res) => {
@@ -175,4 +176,163 @@ exports.findByLabel = async (req, res) => {
     console.error(err);
     return res.status(500).send({ message: 'Error', code: 3000 });
   }
+};
+
+exports.deleteByName = async (req, res) => {
+  try {
+
+    if (!isUserAdmin(res)){
+      return res.status(404).send({ message: 'No tiene permisos para realizar esta accion', code: 3000 });
+    }
+    
+    // Encuentra y elimina la planta por su nombre
+    let plant = await Plant.findOneAndDelete({ nombre_cientifico: req.params.nombre_cientifico });
+
+    // Si no se encuentra la planta, devuelve un mensaje
+    if (!plant) {
+      return res.status(200).send({ message: 'Planta no encontrada', code: 3000 });
+    } else {
+      //Si se se encuentra y elimina se crea el log correspondiente
+      await PostLog('PLANT DELETE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha eliminado la planta: ${plant.nombre_cientifico}`, res.locals.tokenedUser._id);
+      return res.status(200).send({ message: 'Planta eliminada', code: 2000 });
+    }
+  } catch (err) {
+    console.error("Plant Controller: deleteByName");
+    console.error(err);
+    return res.status(500).send({ message: 'Error', code: 3000 });
+  }
+};
+
+exports.updatePlantInfo = async (req, res) => {
+  try {
+
+    if (!isUserAdmin(res)){
+      return res.status(404).send({ message: 'No tiene permisos para realizar esta accion', code: 3000 });
+    }
+
+    // Encuentra y elimina la planta por su nombre
+    let plant = await Plant.findOne({ _id: req.params.id });
+
+    if (req.body.nombre_cientifico == "" || req.body.familia == "" || req.body.genero == ""){
+      return res.status(200).send({ message: 'Peticion incompleta', code: 3000 });
+    }
+
+    // Si no se encuentra la planta, devuelve un mensaje
+    if (!plant) {
+      return res.status(200).send({ message: 'Planta no encontrada', code: 3000 });
+    }
+    
+    plant.nombre_cientifico=req.body.nombre_cientifico;
+    plant.nombre_comun=req.body.nombre_comun;
+    plant.familia=req.body.familia;
+    plant.genero=req.body.genero;
+    plant.descripcion=req.body.descripcion;
+    plant.save();
+
+    await PostLog('PLANT UPDATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha modificado la planta: ${plant.nombre_cientifico}`, res.locals.tokenedUser._id);
+    return res.status(200).send({ message: 'Planta Actualizada', code: 2000 });
+  } catch (err) {
+    console.error("Plant Controller: updatePlantInfo");
+    console.error(err);
+    return res.status(500).send({ message: 'Error', code: 3000 });
+  }
+};
+
+exports.removeDisease = async (req, res) => {
+  try {
+
+    if (!isUserAdmin(res)){
+      return res.status(404).send({ message: 'No tiene permisos para realizar esta accion', code: 3000 });
+    }
+
+    const plantId = req.params.plantId; // ID de la planta
+    const diseaseId = req.params.diseaseId; // ID de la enfermedad a eliminar
+
+    // Encuentra la planta y elimina la enfermedad del array de enfermedades
+    const result = await Plant.findByIdAndUpdate(
+      plantId,
+      { $pull: { enfermedades: diseaseId } },
+      { new: true } // Devuelve el documento actualizado
+    );
+
+    // Si no se encuentra la planta, devuelve un mensaje
+    if (!result) {
+      return res.status(404).send({ message: 'Planta no encontrada', code: 3000 });
+    }
+
+    await PostLog('PLANT UPDATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha eliminado una enfermedad de la planta: ${result.nombre_cientifico}`, res.locals.tokenedUser._id);
+    return res.status(200).send({ message: 'Enfermedad eliminada de la planta', code: 2000 });
+  } catch (err) {
+    console.error("Plant Controller: removeDisease");
+    console.error(err);
+    return res.status(500).send({ message: 'Error', code: 3000 });
+  }
+};
+
+exports.updateTemps = async (req, res) => {
+  try {
+
+    if (!isUserAdmin(res)){
+      return res.status(404).send({ message: 'No tiene permisos para realizar esta accion', code: 3000 });
+    }
+
+    // Encuentra la planta
+    const result = await Plant.findOne({_id:req.params.id});
+
+    // Si no se encuentra la planta, devuelve un mensaje
+    if (!result) {
+      return res.status(404).send({ message: 'Planta no encontrada', code: 3000 });
+    }
+
+    //Si encontramos la planta actualizamos sus temperaturas a las nuevas
+    result.temperaturas=req.body.temperaturas;
+    result.save();
+    await PostLog('PLANT UPDATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha actualizado las temperaturas de la planta: ${result.nombre_cientifico}`, res.locals.tokenedUser._id);
+    return res.status(200).send({ message: 'Temperaturas actualizadas', code: 2000 });
+  } catch (err) {
+    console.error("Plant Controller: updateTemps");
+    console.error(err);
+    return res.status(500).send({ message: 'Error', code: 3000 });
+  }
+};
+
+exports.removePicture = async (req, res) => {
+  try {
+    const plantId = req.body.id; // ID de la planta
+    const image = req.body.imagen; // Imagen a eliminar
+
+    if (!isUserAdmin(res)){
+      return res.status(404).send({ message: 'No tiene permisos para realizar esta accion', code: 3000 });
+    }
+
+    // Encuentra la planta y elimina la imagen del array de imagenes
+    const result = await Plant.findByIdAndUpdate(
+      plantId,
+      { $pull: { imagenes: image } },
+      { new: true } // Devuelve el documento actualizado
+    );
+
+    // Si no se encuentra la planta, devuelve un mensaje
+    if (!result) {
+      return res.status(404).send({ message: 'Planta no encontrada', code: 3000 });
+    }
+
+    await PostLog('PLANT UPDATE', `El usuario ${res.locals.tokenedUser.info.nombre_usuario} ha eliminado una imagen de la planta: ${result.nombre_cientifico}`, res.locals.tokenedUser._id);
+    return res.status(200).send({ message: 'Imagen eliminada', code: 2000 });
+  } catch (err) {
+    console.error("Plant Controller: removePicture");
+    console.error(err);
+    return res.status(500).send({ message: 'Error', code: 3000 });
+  }
+};
+
+function isUserAdmin(res){
+  // Petitioner user
+  const tokenedUser = res.locals?.tokenedUser;
+  let isAdmin = false;
+  // Super admin or User admin
+  if (tokenedUser && tokenedUser.role && (tokenedUser.role._id == DEFAULT_ROLES[0]._id.toString() || tokenedUser.role.actions?.includes("DETAILS_ADMIN"))) {
+    isAdmin = true;
+  }
+  return isAdmin;
 };
