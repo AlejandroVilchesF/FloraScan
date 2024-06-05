@@ -121,9 +121,9 @@
     <ModalConfirm 
       id="deleteUserModal" 
       title="Delete user" 
-      message="The selected user will be deleted from the database, this action is irreversible"
-      confirm="Yes, delete user"
-      reject="No, I made a mistake"
+      message="El usuario seleccionado sera eliminado de forma permanente, esta accion es irreversible."
+      confirm="Si, elimina el usuario"
+      reject="No, he cometido un error"
     />
 
     <!-- USER TABLE -->

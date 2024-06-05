@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const User = require("../models").user;
-const { DEFAULT_APP, DEFAULT_ROLES, DEFAULT_USER, DEFAULT_SERVERS } = require("../config/costants/default.data");
+const { DEFAULT_ROLES} = require("../config/costants/default.data");
 const PostLog = require('../controllers/system.log.controller').postLog;
 
 verifyToken = async (req, res, next) => {

@@ -22,12 +22,8 @@ service.interceptors.request.use(
 
   config => {
     const usersStore = useUsersStore();
-    /* console.log('Axios request interceptor');
-    console.log(`Token: ${usersStore.token}`);
-    console.log(`URL: ${config.url}`); */
-
     // Interceptamos cada petición que realizamos por Axios
-    // para que incluya el token y el SSID en el header
+    // para que incluya el token
     if (usersStore.token) {
       config.headers['x-access-token'] = usersStore.token
     }
@@ -47,13 +43,6 @@ service.interceptors.request.use(
 /* INTEPCEPTOR DE RESPUESTAS AXIOS */
 /**********************************/
 service.interceptors.response.use(
-  /**
-   * NOTA:: Los codigos de respuesta personalizados se
-   * detectaran bajo rsponse
-   * NOTA2: Los cdogiso 400..401..40x son de error
-   * por lo que se cogeran en la parte de error
-  */
-
   response => {
     // CÓDIGO: 2000 == La operación es correcta y se mostrará el TOAST
     // CÓDIGO: 2001 == La operación es correcta y no se mostrará el TOAST
@@ -108,7 +97,6 @@ service.interceptors.response.use(
 
   /* MANEJO DE CODIGO DE ERRORES 400..404.. 500, 502*/
   async error => {
-    //console.log(`Error code: ${error.response.status}`);
     //400 Bad Request
     if (error.response.status === 400) {
       useToastStore().showMessage({

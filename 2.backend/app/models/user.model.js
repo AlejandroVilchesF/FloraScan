@@ -34,7 +34,6 @@ module.exports = mongoose => {
         bio: String
       },
       role: { type: mongoose.Schema.ObjectId, ref: "roles" },
-      albumes: [{ type: mongoose.Schema.ObjectId, ref: "albumes" }],
       localStorage: Object,
 
     },

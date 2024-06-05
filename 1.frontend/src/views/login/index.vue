@@ -21,7 +21,6 @@
             <div class="col-xl-8">
               <div :class="showForm ? 'd-none' : 'd-flex justify-content-center align-items-center'"
                 :style="`max-width: 400px; height: 400px`">
-                <img src="~@/assets/img/bouncing-circles.svg" style="width: 200px;" />
               </div>
               <div :class="showForm ? 'd-block' : 'd-none'">
                 <!--Theme Selector-->

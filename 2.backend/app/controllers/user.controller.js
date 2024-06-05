@@ -1,7 +1,7 @@
 const config = require('../config/config');
 const User = require("../models/").user;
 const Role = require("../models/").roles;
-const { DEFAULT_APP, DEFAULT_ROLES, DEFAULT_USER, DEFAULT_SERVERS } = require("../config/costants/default.data");
+const {DEFAULT_ROLES, DEFAULT_USER } = require("../config/costants/default.data");
 const authContr = require('./auth.controller');
 const SECTIONS = require("../config/costants/sections").sections;
 const bcrypt = require('bcrypt');

@@ -11,14 +11,14 @@
 import { onMounted, onBeforeUnmount } from "vue";
 import Toast from "@/components/commons/Toast";
 import { useCommonStore } from "@/stores/CommonVuex";
-import { useEventsStore } from "@/stores/EventsVuex";
+//import { useEventsStore } from "@/stores/EventsVuex";
 import { useUsersStore } from "@/stores/UsersVuex";
 import { setLocalStorage } from "./utils/local.storage.js";
 import { useToastStore } from "@/stores/ToastVuex";
 // Variables
 /////////////////////////////////
 const commonStore = useCommonStore();
-const eventsStore = useEventsStore();
+//const eventsStore = useEventsStore();
 const usersStore = useUsersStore();
 const toastStore = useToastStore();
 
