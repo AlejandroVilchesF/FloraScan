@@ -14,15 +14,6 @@ export const useCommonStore = defineStore('common', {
   }),
 
   actions: {
-    a_setBasicSettings(data) {
-      this.basicSettings = data;
-      this.basicSettings.state = true;
-    },
-
-    a_updateBasicSettings(data) {
-      this.basicSettings.site = data;
-    },
-
     a_getScreenParams() {
       const data = {
         width: window.innerWidth,
@@ -30,11 +21,6 @@ export const useCommonStore = defineStore('common', {
       };
       this.screenResolution = data;
       return true;
-    },
-
-    a_setLanguage(lang){
-      localStorage.setItem('lang', lang);
-      this.lang = lang;
     },
 
     async a_getEncryptedLocalStorage(){

@@ -9,7 +9,7 @@ import { useToastStore } from "@/stores/ToastVuex";
 /*****************************************/
 const service = axios.create({
   baseURL: settings.template.site.apiurl,
-  timeout: 60000*5, // Timeout de la peticion (5 minutos)
+  timeout: 60000 * 5, // Timeout de la peticion (5 minutos)
   headers: {
     "Content-type": "application/json"
   }
@@ -72,11 +72,11 @@ service.interceptors.response.use(
       // Devolvemos el objeto de los datos
       // quitandole las cabeceras, config, etc      
       return response.data
-    } else if ((response.data.code === 3001)){
+    } else if ((response.data.code === 3001)) {
       // Devolvemos el objeto de los datos
       // quitandole las cabeceras, config, etc
       return response.data;
-    }else if ((response.data.code === 4000)) {
+    } else if ((response.data.code === 4000)) {
       useToastStore().showMessage({
         message: response.data.message,
         style: "error"
@@ -100,7 +100,7 @@ service.interceptors.response.use(
     //400 Bad Request
     if (error.response.status === 400) {
       useToastStore().showMessage({
-        message: error.response.data.message? error.response.data.message : 'Bad Request',
+        message: error.response.data.message ? error.response.data.message : 'Bad Request',
         style: "error",
       });
     }
@@ -108,17 +108,17 @@ service.interceptors.response.use(
     // 401 Unauthorized
     if (error.response.status === 401) {
       useToastStore().showMessage({
-        message: error.response.data.message? error.response.data.message : 'Unauthorized',
+        message: error.response.data.message ? error.response.data.message : 'Unauthorized',
         style: "error",
       });
       await useUsersStore().v_removeSeflData();
-      router.push({name: 'inicio'});
+      router.push({ name: 'inicio' });
     }
 
     // 403 Forbidden 
     if (error.response.status === 403) {
       useToastStore().showMessage({
-        message: error.response.data.message? error.response.data.message : 'Forbidden',
+        message: error.response.data.message ? error.response.data.message : 'Forbidden',
         style: "error",
       });
     }
@@ -126,7 +126,7 @@ service.interceptors.response.use(
     // 404 Not found
     if (error.response.status === 404) {
       useToastStore().showMessage({
-        message: error.response.data.message? error.response.data.message : 'Not found',
+        message: error.response.data.message ? error.response.data.message : 'Not found',
         style: "error",
       });
     }
@@ -138,14 +138,14 @@ service.interceptors.response.use(
         style: "error",
       });
     }
-   
+
     // 500 Internal Server Error
     if (error.response.status === 500) {
       useToastStore().showMessage({
         message: "API comunication error",
         style: "error",
       });
-    }    
+    }
 
     // 502 Bad Gateway
     if (error.response.status === 502) {

@@ -40,7 +40,6 @@ class UserService {
     
   /* Actualizar los datos del usuario por el ID */
   updateUser(id, data){
-    console.log(data);
     return http.put(`user/data/${id}`, data)
   }  
 
@@ -84,37 +83,6 @@ class UserService {
       }
     }
     return http.post("/user/register", body);
-  }
-
-
-  activateAccount(activationToken){
-    let body = {
-      activation: activationToken
-    }
-    return http.post("/auth/activate", body);
-  }
-
-  checkRecoveryToken(recoveryToken){
-    let body = {
-      recovery: recoveryToken
-    }
-    return http.post("/auth/recovery/check", body);
-  }
-
-  setRecoveryToken(email){
-    let body = {
-      email: email
-    }
-    return http.put("/auth/recovery/start", body);
-  }
-
-  resetPassword(userId, recoveryToken, newPassword){
-    let body = {
-      id: userId,
-      recovery: recoveryToken,
-      password: newPassword
-    }
-    return http.put("/user/password/reset", body);
   }
 
   saverUserLocalStorage(data){

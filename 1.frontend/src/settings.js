@@ -6,8 +6,6 @@ let template = {
         shortname: "FloraScan",
         /* URL DLE BACKEND */
         apiurl: "/api", /* http://localhost:8091/api */
-        /* URL DE NOTIFICACIONES PUSH */
-        eventsurl: "/api/events/subscribe" /* http://localhost:8091/api/events/subscribe */
     },
     /* Key del superusuario */
     superuser: "Super Admin",

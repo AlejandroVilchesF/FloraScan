@@ -97,30 +97,6 @@ async function logout(req, res) {
   }
 }
 
-async function activateAccount(req, res) {
-  try {
-    const activationToken = req.body.activation;
-    let payload = null;
-    try {
-      payload = await jwt.verify(activationToken, config.secret);
-    }
-    catch (error) {
-      return res.status(403).send({ message: 'Activacion caducada', code: 3000 });
-    }
-    const FindUser = await User.findOne({ _id: payload?._id });
-    if (!FindUser || FindUser.activation != activationToken) {
-      return res.status(403).send({ message: 'Activacion caducada', code: 3000 });
-    }
-    await User.updateOne({ _id: FindUser._id }, { 'info.status': true, activation: null });
-    await PostLog('ACCOUNT ACTIVATION', `El usuario ${FindUser.info.nombre_usuario} ha activado la cuenta con exito`, FindUser._id);
-    return res.status(200).send({ message: 'Cuenta activada', code: 2000 });
-  } catch (err) {
-    console.error("Auth controller: activateAccount")
-    console.error(err);
-    return res.status(500).send({ message: 'Error', code: 3000 });
-  }
-}
-
 function encryptPassword(password) {
   return bcrypt.hashSync(password, 8);
 }
@@ -129,6 +105,5 @@ function encryptPassword(password) {
 module.exports = {
   login,
   logout,
-  encryptPassword,
-  activateAccount
+  encryptPassword
 }
